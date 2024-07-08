@@ -1,0 +1,56 @@
+.menu-item:hover {
+  position: relative;
+  .submenu {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 100%;
+    left: 0;
+    width: 200%;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+    li:first-child:hover {
+      position: relative;
+
+      ul {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        left: 100%;
+        top: 0;
+        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        width: 50%;
+        li {
+          padding: 1rem;
+          cursor: pointer;
+          background-color: white;
+        }
+        li:hover {
+          background-color: #f3f4f6;
+        }
+      }
+    }
+    li:nth-child(2):hover {
+      position: relative;
+
+      ul {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        left: 100%;
+        top: 0;
+        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        width: 50%;
+
+        li {
+          padding: 1rem;
+          cursor: pointer;
+          background-color: white;
+        }
+        li:hover {
+          background-color: #f3f4f6;
+        }
+      }
+    }
+  }
+}
