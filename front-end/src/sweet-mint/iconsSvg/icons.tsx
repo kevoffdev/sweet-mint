@@ -1,7 +1,7 @@
-export function ArrowDown() {
+export function ArrowDown({size = 5}: {size?: number}) {
   return (
     <svg
-      className="relative top-0.5 size-5"
+      className={`relative top-0.5 size-${size}`}
       fill="none"
       stroke="currentColor"
       strokeWidth={1.5}
@@ -16,7 +16,7 @@ export function ArrowDown() {
 export function ArrowRight() {
   return (
     <svg
-      className="size-6"
+      className="size-5"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"

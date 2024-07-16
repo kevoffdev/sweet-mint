@@ -1,0 +1,93 @@
+[
+  {
+    "title": "Fanta naranja",
+    "price": "1.000,00",
+    "categoria": "nacionales",
+    "tipo": "bebidas",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/95ac0c7e021ee53dd8a871a815fa8e5312ea1e312a8d4f5f6ac8e5848f0199f8110377.webp"
+  },
+  {
+    "title": "Mini cofler block",
+    "price": "650,00",
+    "categoria": "nacionales",
+    "tipo": "chocolate",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/0ebad4f743cdf521861a36e64f404609ff62e332dc2a0fca818f74eb1f6405f6110377.webp"
+  },
+  {
+    "title": "Moritas mogul",
+    "price": "999,97",
+    "categoria": "nacionales",
+    "tipo": "varios",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/0f9cc4e5d4a91dcf6ea94c2cd189443bca74b7572bd3dd5301ded57067582b12110377.webp"
+  },
+  {
+    "title": "Warheads Manzana verde",
+    "price": "8.200,00",
+    "categoria": "importados",
+    "tipo": "bebidas",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/f4d8408d5eee03cef539f300afeca31f47aafa1d7829f74d236b2d563560c02c110377.webp"
+  },
+  {
+    "title": "Fanta Limon",
+    "price": "1.500,00",
+    "categoria": "nacionales",
+    "tipo": "bebidas",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/a70480eeb2b34aa5a2ca08635fab1403baea6bbbe6b7a4b78a6c2201ff437bec110377.jpg"
+  },
+  {
+    "title": "Cheetos sabor tomate",
+    "price": "4.600,00",
+    "categoria": "importados",
+    "tipo": "snack",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/bd0540c8848d489f5bb5360d66a62253dad97f5f83aae29124d91acbc38a7df2110377.webp"
+  },
+  {
+    "title": "Toppo de vainilla rellenos de chocolate",
+    "price": "4.600,00",
+    "categoria": "importados",
+    "tipo": "chocolate",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/2c4109e9a46734054448f16d5c05353c61653dca3a9e56694d57960696053dd0110377.webp"
+  },
+  {
+    "title": "Ojos rellenos",
+    "price": "650,00",
+    "categoria": "importados",
+    "tipo": "varios",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/8cf8458cae2474e2f6ccb66159621b9df5e01ba3bc4b2007ae77a0c58a0f42c1110377.jpg"
+  },
+  {
+    "title": "Jugo de Mango",
+    "price": "4.500.00",
+    "categoria": "importados",
+    "tipo": "bebidas",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/fd7585a3025a89e9d8fe6a780c7bc36c1c588c3ce80cbaae86e45318af115b36110377.webp"
+  },
+  {
+    "title": "Gomitas Huesitos",
+    "price": "1.000,00",
+    "categoria": "nacionales",
+    "tipo": "varios",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/2d8cb619b704caa2cd3b4b4ab4b5b7073a948717cdd5deb3ffc5de283d894452110377.jpg"
+  },
+  {
+    "title": "Gam Jungle chocolate",
+    "price": "300,00",
+    "categoria": "importados",
+    "tipo": "chocolate",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/a32aedbef081123c49f8ac55a534a97987b5ce6dcb6c812f93442c8810bf7e63110377.png"
+  },
+  {
+    "title": "Snack Pokémon sabor pollo",
+    "price": "2.300,00",
+    "categoria": "importados",
+    "tipo": "snack",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/8a2907c865e8cd0305be967be8a0cdf26919c3809701a4e14bfa6f7d6fd7feec110377.jpg"
+  },
+  {
+    "title": "Pelota rellena",
+    "price": "650,00",
+    "categoria": "importados",
+    "tipo": "varios",
+    "image": "https://d22fxaf9t8d39k.cloudfront.net/d27eef347a5260289e95cf2b92b5a26701edeb61e749d95607e3dcb42a11be23110377.jpg"
+  }
+]

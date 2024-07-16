@@ -1,12 +1,11 @@
-import {Layout} from "../components/Layout";
-import {ListaProductos} from "../components/ListaProductos";
+import {useLocation} from "react-router-dom";
+
+import {ProductoPageLayout} from "../components/ProductoCategory";
+import {categoriasProductos} from "../../data/links.json";
 
 export const Productos = () => {
-  return (
-    <>
-      <Layout>
-        <ListaProductos />
-      </Layout>
-    </>
-  );
+  const {pathname} = useLocation();
+  const path = pathname.replace("/", "");
+
+  return <ProductoPageLayout links={categoriasProductos} path={path} />;
 };
