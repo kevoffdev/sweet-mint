@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 
 import products from "../../data/productos.json";
 import {useCart} from "../hooks/useCart";
+import {ProductProps} from "../types";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -10,16 +11,32 @@ interface CartModalProps {
 }
 
 export const CartModal = ({isOpen, onClose}: CartModalProps) => {
-  const {productsCart, removeProduct} = useCart();
+  const {productsCart, removeProduct, addProduct} = useCart();
   const modalRef = useRef<null | HTMLDivElement>(null);
   const sumPriceProducts = products.reduce((value, product) => {
     if (productsCart[product.id]) {
-      value = product.price + value;
+      const priceProduct = product.price * productsCart[product.id].quantity;
+
+      value = priceProduct + value;
     }
 
     return value;
   }, 0);
   const productsCartLength = Object.values(productsCart).length;
+
+  const handleClickSum = (id: ProductProps["id"]) => {
+    const productQuantity = products.find((product) => product.id === id)?.quantity;
+
+    if (!productQuantity) return;
+    if (productQuantity - (productsCart[id].quantity + 1) < 0) return;
+
+    addProduct({id, quantity: 1});
+  };
+
+  const handleClickMinus = (id: ProductProps["id"]) => {
+    if (productsCart[id].quantity - 1 < 1) return;
+    addProduct({id, quantity: -1});
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -63,15 +80,25 @@ export const CartModal = ({isOpen, onClose}: CartModalProps) => {
                     <div className="flex flex-col gap-2">
                       <p>{product.title}</p>
                       <div className="flex gap-1">
-                        <button className="w-8 rounded-full border bg-slate-100 py-1">-</button>
+                        <button
+                          className="w-8 rounded-full border bg-slate-100 py-1 transition duration-100 hover:bg-black hover:text-white"
+                          onClick={() => handleClickMinus(product.id)}
+                        >
+                          -
+                        </button>
                         <span className="flex w-12 items-center justify-center rounded-full border py-1">
                           {productsCart[product.id].quantity}
                         </span>
-                        <button className="w-8 rounded-full border bg-slate-100 py-1">+</button>
+                        <button
+                          className="w-8 rounded-full border bg-slate-100 py-1 transition duration-100 hover:bg-black hover:text-white"
+                          onClick={() => handleClickSum(product.id)}
+                        >
+                          +
+                        </button>
                       </div>
                     </div>
                     <div className="flex flex-1 justify-end gap-2">
-                      <p>${product.price}</p>
+                      <p>${product.price * productsCart[product.id].quantity}</p>
                       <button type="button" onClick={() => removeProduct(product.id)}>
                         <svg
                           className="size-6"

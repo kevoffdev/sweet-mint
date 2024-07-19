@@ -1,9 +1,17 @@
 import {Link, useLocation, useParams} from "react-router-dom";
+import {useState} from "react";
 
 import {Layout} from "../components/Layout";
 import {ListaProductos} from "../components/ListaProductos";
+import {SortBySelect} from "../components/SortBySelect";
+import {SortBy} from "../types";
 
 export const CategoryTipoPage = () => {
+  const [sortBy, setSortBy] = useState<SortBy>(SortBy.OLDTONEW);
+
+  const onChange = (value: SortBy) => {
+    setSortBy(value);
+  };
   const {category, type} = useParams();
   const search = new URLSearchParams(useLocation().search).get("query");
 
@@ -24,15 +32,10 @@ export const CategoryTipoPage = () => {
               <Link to={`/productos/${category}/${type}`}>{type}</Link>
             </li>
           </ul>
-          <select className="border-2 border-black" id="" name="">
-            <option value="1">Más viejo a más nuevo</option>
-            <option value="">Más nuevo a más viejo</option>
-            <option value="">Precio mayor a menor</option>
-            <option value="">Precio menor a mayor</option>
-          </select>
+          <SortBySelect onChange={onChange} />
         </div>
         <div>
-          <ListaProductos category={category} search={search} tipo={type} />
+          <ListaProductos category={category} search={search} sortBy={sortBy} type={type} />
         </div>
       </div>
     </Layout>

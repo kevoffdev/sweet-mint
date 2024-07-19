@@ -1,7 +1,11 @@
 import {Link, useLocation} from "react-router-dom";
+import {useState} from "react";
+
+import {SortBy} from "../types";
 
 import {ListaProductos} from "./ListaProductos";
 import {Layout} from "./Layout";
+import {SortBySelect} from "./SortBySelect";
 
 interface ProductoPageLayoutProps {
   path: string | undefined;
@@ -9,7 +13,12 @@ interface ProductoPageLayoutProps {
 }
 
 export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
+  const [sortBy, setSortBy] = useState<SortBy>(SortBy.OLDTONEW);
   const search = new URLSearchParams(useLocation().search).get("query");
+
+  const onChange = (value: SortBy) => {
+    setSortBy(value);
+  };
 
   if (!path) return <div>error</div>;
 
@@ -24,12 +33,7 @@ export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
             <span>/</span>
             <li className="capitalize">{path}</li>
           </ul>
-          <select className="border-2 border-black" id="" name="">
-            <option value="1">Más viejo a más nuevo</option>
-            <option value="">Más nuevo a más viejo</option>
-            <option value="">Precio mayor a menor</option>
-            <option value="">Precio menor a mayor</option>
-          </select>
+          <SortBySelect onChange={onChange} />
         </div>
         <div className="flex flex-col gap-4">
           <p className="text-2xl capitalize">{path}</p>
@@ -46,7 +50,7 @@ export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
           </ul>
         </div>
         <div className="col-span-3">
-          <ListaProductos category={path} search={search} />
+          <ListaProductos category={path} search={search} sortBy={sortBy} />
         </div>
       </div>
     </Layout>

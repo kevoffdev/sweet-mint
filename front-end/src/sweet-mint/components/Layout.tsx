@@ -5,7 +5,7 @@ import {linksProductos} from "../../data/links.json";
 import shopping_cart from "../../assets/images/shopping-cart.png";
 import sweetMint from "../../assets/images/sweetmint.jpg";
 import {ArrowDown, ArrowRight} from "../iconsSvg/icons";
-import {FormUsuario} from "../../components/FormUsuario";
+import {SearchUsuario} from "../../components/SearchUsuario";
 import {Login} from "../../components/Login";
 import {CartModal} from "../modals/CartModal";
 import {useCart} from "../hooks/useCart";
@@ -41,7 +41,7 @@ export const Layout = ({children}: {children: ReactNode}) => {
       >
         <header className="relative">
           <div className="m-auto flex w-full max-w-6xl items-center justify-between py-3">
-            <FormUsuario />
+            <SearchUsuario />
             <Link className="block h-36 w-36" to="/">
               <img alt="logo de la tienda" src={sweetMint} />
             </Link>

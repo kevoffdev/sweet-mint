@@ -19,3 +19,10 @@ export interface CartContextProps {
   }) => void;
   removeProduct: (id: ProductProps["id"]) => void;
 }
+
+export enum SortBy {
+  OLDTONEW = "oldToNew",
+  NEWTOOLD = "newToOld",
+  HIGHESTTOLOWESTPRICE = "highestToLowestPrice",
+  LOWESTTOHIGHESTPRICE = "lowestToHighestPrice",
+}

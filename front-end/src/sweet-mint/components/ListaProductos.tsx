@@ -3,35 +3,44 @@ import {Link, useLocation} from "react-router-dom";
 
 import products from "../../data/productos.json";
 import {ArrowDown} from "../iconsSvg/icons";
+import {SortBy} from "../types/index";
+import {useDebounce} from "../hooks/useDebounce";
+import {getProductsSorted} from "../../helpers/getProductsSorted";
 
 interface ListaProductosProps {
   category?: string;
-  tipo?: string;
+  type?: string;
   search?: string | null;
+  sortBy?: SortBy;
 }
 
-export const ListaProductos = ({category, tipo, search}: ListaProductosProps) => {
+export const ListaProductos = ({category, type, search, sortBy}: ListaProductosProps) => {
   const {pathname} = useLocation();
+
+  const debouncedSearch = useDebounce(search, 500);
+
   const productsFiltered = useMemo(() => {
     return products.filter((product) => {
       const categoryMatch = category !== "productos" ? product.categoria === category : true;
-      const searchMatch = search
-        ? product.title.toLowerCase().includes(search.toLowerCase())
+      const searchMatch = debouncedSearch
+        ? product.title.toLowerCase().includes(debouncedSearch.toLowerCase())
         : true;
-      const typeMatch = tipo ? product.tipo === tipo : true;
+      const typeMatch = type ? product.tipo === type : true;
 
       return categoryMatch && typeMatch && searchMatch;
     });
-  }, [category, tipo, search]);
+  }, [category, type, debouncedSearch]);
+
+  const productsSorted = sortBy ? getProductsSorted(sortBy, productsFiltered) : productsFiltered;
 
   return (
     <>
-      {productsFiltered.length === 0 ? (
+      {productsSorted.length === 0 ? (
         <div className="m-5 text-center text-xl font-thin">No se encontraron productos</div>
       ) : (
         <div>
           <section className="my-10 grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] place-content-center place-items-center gap-10">
-            {productsFiltered.map((product) => {
+            {productsSorted.map((product) => {
               const title = product.title.toLowerCase().split(" ").join("-");
 
               return (
