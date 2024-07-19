@@ -1,6 +1,4 @@
-import {Link} from "react-router-dom";
-
-import {ArrowDown} from "../iconsSvg/icons";
+import {Link, useLocation} from "react-router-dom";
 
 import {ListaProductos} from "./ListaProductos";
 import {Layout} from "./Layout";
@@ -11,6 +9,8 @@ interface ProductoPageLayoutProps {
 }
 
 export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
+  const search = new URLSearchParams(useLocation().search).get("query");
+
   if (!path) return <div>error</div>;
 
   return (
@@ -46,14 +46,7 @@ export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
           </ul>
         </div>
         <div className="col-span-3">
-          <ListaProductos category={path} />
-          <div className="mb-10 text-center">
-            <Link className="flex items-center justify-center" to="/productos">
-              <button className="flex items-center justify-center bg-black px-8 py-3 text-white">
-                {<ArrowDown size={6} />}
-              </button>
-            </Link>
-          </div>
+          <ListaProductos category={path} search={search} />
         </div>
       </div>
     </Layout>

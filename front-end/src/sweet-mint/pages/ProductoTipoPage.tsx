@@ -1,10 +1,11 @@
-import {Link, useParams} from "react-router-dom";
+import {Link, useLocation, useParams} from "react-router-dom";
 
 import {Layout} from "../components/Layout";
 import {ListaProductos} from "../components/ListaProductos";
 
 export const CategoryTipoPage = () => {
-  const {category, tipo} = useParams();
+  const {category, type} = useParams();
+  const search = new URLSearchParams(useLocation().search).get("query");
 
   return (
     <Layout>
@@ -20,7 +21,7 @@ export const CategoryTipoPage = () => {
             </li>
             <span>/</span>
             <li>
-              <Link to={`/productos/${category}/${tipo}`}>{tipo}</Link>
+              <Link to={`/productos/${category}/${type}`}>{type}</Link>
             </li>
           </ul>
           <select className="border-2 border-black" id="" name="">
@@ -31,7 +32,7 @@ export const CategoryTipoPage = () => {
           </select>
         </div>
         <div>
-          <ListaProductos category={category} tipo={tipo} />
+          <ListaProductos category={category} search={search} tipo={type} />
         </div>
       </div>
     </Layout>

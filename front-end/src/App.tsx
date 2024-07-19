@@ -1,12 +1,15 @@
 import {HashRouter} from "react-router-dom";
 
 import {AppRouter} from "./router/AppRouter";
+import {CartProvider} from "./sweet-mint/context/Cart";
 
 function App() {
   return (
     <>
       <HashRouter>
-        <AppRouter />
+        <CartProvider>
+          <AppRouter />
+        </CartProvider>
       </HashRouter>
     </>
   );
