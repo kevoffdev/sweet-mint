@@ -3,7 +3,6 @@ import {
   HOST_DATABASE, USER_DATABASE, PORT_DATABASE,
   PASSWORD_DATABASE, NAME_DATABASE
 } from '../config.js'
-
 let connection
 const config = {
   host: HOST_DATABASE,
