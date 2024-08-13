@@ -6,5 +6,6 @@ export const {
   USER_DATABASE,
   PORT_DATABASE,
   PASSWORD_DATABASE,
-  NAME_DATABASE
+  NAME_DATABASE,
+  SECRET_KEY
 } = process.env

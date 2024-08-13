@@ -1,23 +1,111 @@
-import { validateUser } from '../schemas/auth.js'
+import bcrypt from 'bcrypt'
 
-export class UserController {
-  constructor ({ userModel }) {
-    this.userModel = userModel
-  }
+import { connection } from '../database/databaseConfig.js'
+import generateJWT from '../helpers/generateJWT.js'
 
-  registerUser = async (req, res) => {
-    const result = validateUser(req)
-    if (!result.success) {
-      return res.status(400).json({
-        ok: result.success,
-        error: JSON.parse(result.error.message)
+export class UserModel {
+  static async register (req, res) {
+    const { firstName, lastName, emailAdress, password, confirmedPassword } = req.body
+    try {
+      const [checkEmail] = await connection.query('SELECT * FROM users WHERE email_adress = ?;', [emailAdress])
+      if (checkEmail.length) {
+        return res.status(409).json({
+          ok: false,
+          msg: 'Error the email is already created'
+        })
+      }
+
+      if (password !== confirmedPassword) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'Passwords are not the same'
+        })
+      }
+
+      const hassedPassword = await bcrypt.hash(password, 10)
+
+      await connection.query(`
+        INSERT INTO users (first_name,last_name,user_password,email_adress) VALUES (?,?,?,?);`
+      , [firstName, lastName, hassedPassword, emailAdress]
+      )
+
+      return res.status(201).json({
+        ok: true,
+        msg: 'User registered successfully'
+      })
+    } catch (error) {
+      console.error('Model Error:', error)
+      return res.status(500).json({
+        ok: false,
+        msg: 'Internal server error'
       })
     }
+  }
+
+  static async login (req, res) {
+    const { password, emailAdress } = req.body
     try {
-      const { status, resp } = await this.userModel.registerUser({ user: result.data })
-      return res.status(status).json(resp)
+      const [user] = await connection.query('SELECT first_name,last_name,email_adress,phonenumber,user_password,BIN_TO_UUID(user_id) user_id FROM users WHERE email_adress = ?', [emailAdress])
+      if (user.length === 0) {
+        return res.status(409).json({
+          ok: false,
+          msg: 'Error not found email'
+        })
+      }
+      const validPassword = await bcrypt.compare(password, user[0].user_password)
+      if (!validPassword) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'Password incorrect'
+        })
+      }
+      const token = await generateJWT(user[0].user_id, user[0].first_name)
+
+      res.cookie('access_token', token, {
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 1000 * 60 * 60
+      })
+      return res.status(200).json({
+        ok: true,
+        msg: 'login correct',
+        user: {
+          firstName: user[0].first_name,
+          lastName: user[0].last_name,
+          token
+        }
+      })
     } catch (error) {
-      console.error('Controller Error:', error)
+      console.error('Model Error:', error)
+      return res.status(500).json({
+        ok: false,
+        msg: 'Internal server error'
+      })
+    }
+  }
+
+  static async revalidateJWT (req, res) {
+    const { user } = req.session
+    try {
+      const [data] = await connection.query('SELECT first_name,last_name,email_adress,phonenumber,user_password,BIN_TO_UUID(user_id) user_id FROM users WHERE BIN_TO_UUID(user_id) = ?', [user.id])
+      const token = await generateJWT(user.id, user.username)
+      res.cookie('access_token', token, {
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 1000 * 60 * 60
+      })
+
+      return res.status(200).json({
+        ok: true,
+        msg: 'login correct',
+        user: {
+          firstName: data[0].first_name,
+          lastName: data[0].last_name,
+          token
+        }
+      })
+    } catch (error) {
+      console.error(error)
       return res.status(500).json({
         ok: false,
         msg: 'Internal server error'

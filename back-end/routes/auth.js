@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import { UserController } from '../controllers/auth.js'
+import { schemaValidation } from '../middlewares/schemaValidator.js'
+import { UserModel } from '../controllers/auth.js'
+import { userLoginSchema, userRegisterSchema } from '../schemas/auth.js'
+import { validateJWT } from '../middlewares/validateJWT.js'
 
-export const createAuthRouter = ({ userModel }) => {
-  const authRouter = Router()
+export const authRouter = Router()
 
-  const authController = new UserController({ userModel })
-
-  authRouter.post('/register', authController.registerUser)
-  return authRouter
-}
+authRouter.post('/register', schemaValidation(userRegisterSchema), UserModel.register)
+authRouter.post('/login', schemaValidation(userLoginSchema), UserModel.login)
+authRouter.get('/renew', validateJWT, UserModel.revalidateJWT)
