@@ -1,12 +1,24 @@
 import {Navigate, Route, Routes} from "react-router-dom";
+import {useEffect} from "react";
 
 import {Home} from "../sweet-mint/pages/Home";
 import {Productos} from "../sweet-mint/pages/Productos";
 import {CategoryPage} from "../sweet-mint/pages/CategoryPage";
 import {CategoryTipoPage} from "../sweet-mint/pages/ProductoTipoPage";
 import {ProductoPage} from "../sweet-mint/pages/ProductoPage";
+import {useAuth} from "../sweet-mint/hooks/useAuth";
+import {Status} from "../sweet-mint/types";
 
 export const AppRouter = () => {
+  const {checkAuthToken, status} = useAuth();
+
+  useEffect(() => {
+    checkAuthToken();
+  }, []);
+  if (status === Status.Checking) {
+    return <div>cargando...</div>;
+  }
+
   return (
     <Routes>
       <>

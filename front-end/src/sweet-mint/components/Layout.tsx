@@ -40,11 +40,13 @@ export const Layout = ({children}: {children: ReactNode}) => {
         className={`grid min-h-screen w-full grid-rows-[auto,auto,1fr,auto] ${isModalOpen ? "pointer-events-none opacity-50" : ""}`}
       >
         <header className="relative">
-          <div className="m-auto flex w-full max-w-6xl items-center justify-between py-3">
+          <div className="m-auto grid w-full max-w-6xl grid-cols-[270px,1fr,270px] place-content-center items-center py-3">
             <SearchUsuario />
-            <Link className="block h-36 w-36" to="/">
-              <img alt="logo de la tienda" src={sweetMint} />
-            </Link>
+            <div className="flex items-center justify-center">
+              <Link className="block h-36 w-36" to="/">
+                <img alt="logo de la tienda" src={sweetMint} />
+              </Link>
+            </div>
             <Login />
           </div>
         </header>
