@@ -8,4 +8,5 @@ export const authRouter = Router()
 
 authRouter.post('/register', schemaValidation(userRegisterSchema), UserModel.register)
 authRouter.post('/login', schemaValidation(userLoginSchema), UserModel.login)
+authRouter.post('/logout', UserModel.logout)
 authRouter.get('/renew', validateJWT, UserModel.revalidateJWT)

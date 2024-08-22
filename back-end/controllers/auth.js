@@ -84,17 +84,24 @@ export class UserModel {
     }
   }
 
+  static async logout (req, res) {
+    return res.clearCookie('access_token').json({
+      msg: 'Logout successful'
+    })
+  }
+
   static async revalidateJWT (req, res) {
     const { user } = req.session
     try {
-      const [data] = await connection.query('SELECT first_name,last_name,email_adress,phonenumber,user_password,BIN_TO_UUID(user_id) user_id FROM users WHERE BIN_TO_UUID(user_id) = ?', [user.id])
+      const [data] = await connection
+        .query('SELECT first_name,last_name,email_adress,phonenumber,user_password,BIN_TO_UUID(user_id) user_id FROM users WHERE BIN_TO_UUID(user_id) = ?', [user.id])
+
       const token = await generateJWT(user.id, user.username)
       res.cookie('access_token', token, {
         httpOnly: true,
         sameSite: 'strict',
         maxAge: 1000 * 60 * 60
       })
-
       return res.status(200).json({
         ok: true,
         msg: 'login correct',
