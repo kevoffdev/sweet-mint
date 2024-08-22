@@ -1,4 +1,4 @@
-import { ProductProps, SortBy } from "../sweet-mint/types";
+import {ProductProps, SortBy} from "../sweet-mint/types";
 
 export const getProductsSorted = (sortBy: SortBy, products: ProductProps[]) => {
   switch (sortBy) {

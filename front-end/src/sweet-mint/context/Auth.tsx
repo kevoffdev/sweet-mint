@@ -2,7 +2,7 @@ import {createContext, ReactNode, useReducer} from "react";
 
 import {authReducer} from "../reducers/auth";
 import {ActionsAuth, AUTH_ACTION, CreateUser, LoginUser, StateAuth, Status} from "../types";
-import {revalidateJWTRequest} from "../../api/auth";
+import {loginRequest, logoutRequest, registerRequest, revalidateJWTRequest} from "../../api/auth";
 
 const initialContextAuth: StateAuth & ActionsAuth = {
   status: Status.Checking,
@@ -17,6 +17,7 @@ const initialContextAuth: StateAuth & ActionsAuth = {
   registerUser: () => {},
   loginUser: () => {},
   checkAuthToken: () => {},
+  logoutUser: () => {},
 };
 
 const initialState = {
@@ -38,19 +39,25 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 
   const registerUser = async (user: CreateUser) => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(user),
-        credentials: "include",
-      });
-      const data = await response.json();
+      // const response = await fetch("http://localhost:3000/api/auth/register", {
+      //   method: "POST",
+      //   headers: {"Content-Type": "application/json"},
+      //   body: JSON.stringify(user),
+      //   credentials: "include",
+      // });
+      // const data = await response.json();
+      // console.log(user);
+      const data = await registerRequest(user);
 
-      if (!data.ok) {
-        return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
-      }
+      console.log(data);
+      // if (!data.ok) {
+      //   console.log(data);
 
-      return dispatch({type: AUTH_ACTION.REGISTER_USER, value: data.msg});
+      //   return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
+      // }
+      // console.log(data);
+
+      // return dispatch({type: AUTH_ACTION.REGISTER_USER, value: data.msg});
     } catch (error) {
       console.log(error);
 
@@ -60,14 +67,8 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 
   const loginUser = async (user: LoginUser) => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(user),
-        credentials: "include",
-      });
-
-      const data = await response.json();
+      const data = await loginRequest(user);
+      // const data = await response.json();
 
       if (!data.ok) {
         return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
@@ -80,21 +81,27 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
       return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: "Hable con el administrador"});
     }
   };
+  const logoutUser = async () => {
+    const response = await logoutRequest();
+
+    console.log(response);
+    checkAuthToken();
+  };
 
   const checkAuthToken = async () => {
     dispatch({type: AUTH_ACTION.STATUS_AUTH, value: Status.Checking});
     try {
       const response = await revalidateJWTRequest();
 
-      // console.log(response);
       if (!response.ok) {
         return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: response.msg});
       }
-      // console.log(response);
 
       return dispatch({type: AUTH_ACTION.LOGIN_USER, value: response.user});
     } catch (error) {
       console.error(error);
+
+      dispatch({type: AUTH_ACTION.STATUS_AUTH, value: Status.NotAuthenticated});
     }
   };
 
@@ -111,6 +118,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
         registerUser,
         loginUser,
         checkAuthToken,
+        logoutUser,
       }}
     >
       {children}

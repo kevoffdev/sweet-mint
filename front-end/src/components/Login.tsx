@@ -2,9 +2,7 @@ import {useAuth} from "../sweet-mint/hooks/useAuth";
 import {Status} from "../sweet-mint/types";
 
 export const Login = () => {
-  const {errorMessage, message, status, registerUser, loginUser, profile} = useAuth();
-
-  console.log(errorMessage);
+  const {errorMessage, message, status, registerUser, loginUser, logoutUser, profile} = useAuth();
 
   return (
     <nav className="">
@@ -12,13 +10,18 @@ export const Login = () => {
         {status === Status.Authenticated ? (
           <>
             <li className="">
-              <button className="uppercase" onClick={() => {}}>
+              <button
+                className="uppercase"
+                onClick={() => {
+                  console.log(1);
+                }}
+              >
                 {profile.firstName}
               </button>
             </li>
             <li>|</li>
             <li className="">
-              <button className="" onClick={() => {}}>
+              <button className="" onClick={() => logoutUser()}>
                 SALIR
               </button>
             </li>
@@ -54,8 +57,8 @@ export const Login = () => {
                 INICIAR SESIÓN
               </button>
             </li>
-            {errorMessage && <li>{errorMessage}</li>}
-            {message && <li>{message}</li>}
+            {/* {errorMessage && <li>{errorMessage}</li>} */}
+            {/* {message && <li>{message}</li>} */}
           </>
         )}
       </ul>

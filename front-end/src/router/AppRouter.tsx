@@ -15,6 +15,7 @@ export const AppRouter = () => {
   useEffect(() => {
     checkAuthToken();
   }, []);
+
   if (status === Status.Checking) {
     return <div>cargando...</div>;
   }

@@ -18,6 +18,14 @@ export const loginRequest = async (user: LoginUser) => {
   }).then((resp) => resp.json());
 };
 
+export const logoutRequest = async () => {
+  return await fetch("http://localhost:3000/api/auth/logout", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    credentials: "include",
+  }).then((resp) => resp.json());
+};
+
 export const revalidateJWTRequest = async () => {
   return await fetch("http://localhost:3000/api/auth/renew", {
     method: "GET",

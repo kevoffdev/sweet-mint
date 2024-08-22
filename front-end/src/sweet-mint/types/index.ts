@@ -39,6 +39,7 @@ export interface ActionsAuth {
   registerUser: (value: CreateUser) => void;
   loginUser: (value: LoginUser) => void;
   checkAuthToken: () => void;
+  logoutUser: () => void;
 }
 
 export enum Status {
