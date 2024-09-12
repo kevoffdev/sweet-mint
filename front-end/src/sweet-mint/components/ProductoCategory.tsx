@@ -25,7 +25,7 @@ export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
   return (
     <Layout>
       <div className="mx-auto grid w-full max-w-6xl grid-cols-4 grid-rows-[100px,1fr]">
-        <div className="col-span-4 flex items-center justify-between">
+        <div className="flex items-center justify-between col-span-4">
           <ul className="flex gap-2">
             <li>
               <Link to={"/"}>Incio</Link>
@@ -41,7 +41,7 @@ export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
             {links.map((link) => {
               return (
                 <li key={link}>
-                  <Link className="capitalize" to={`/productos/${path}/${link.toLowerCase()}`}>
+                  <Link className="capitalize" to={`/${path}/${link.toLowerCase()}`}>
                     {link}
                   </Link>
                 </li>
