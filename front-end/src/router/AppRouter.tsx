@@ -8,6 +8,7 @@ import {CategoryTipoPage} from "../sweet-mint/pages/ProductoTipoPage";
 import {ProductoPage} from "../sweet-mint/pages/ProductoPage";
 import {useAuth} from "../sweet-mint/hooks/useAuth";
 import {Status} from "../sweet-mint/types";
+import AdminInventory from "../sweet-mint/pages/AdminInvetory";
 
 export const AppRouter = () => {
   const {checkAuthToken, status} = useAuth();
@@ -15,21 +16,28 @@ export const AppRouter = () => {
   useEffect(() => {
     checkAuthToken();
   }, []);
-
   if (status === Status.Checking) {
-    return <div>cargando...</div>;
+    return <div>Cargando...</div>;
   }
 
   return (
     <Routes>
       <>
-        <Route element={<Home />} path="/" />
-        <Route element={<Productos />} path="/productos" />
-        <Route element={<CategoryPage />} path="/productos/:category" />
-
-        <Route element={<CategoryTipoPage />} path="/productos/:category/:type" />
-        <Route element={<ProductoPage />} path="/productos/:category/:type/:name" />
-        <Route element={<Navigate to="/" />} path="/*" />
+        {status === Status.Authenticated ? (
+          <>
+            <Route element={<AdminInventory />} path="/panel/admin" />
+            <Route element={<Navigate to="/panel/admin" />} path="/*" />
+          </>
+        ) : (
+          <>
+            <Route element={<Home />} path="/" />
+            <Route element={<Productos />} path="/productos" />
+            <Route element={<CategoryPage />} path="/productos/:category" />
+            <Route element={<CategoryTipoPage />} path="/productos/:category/:type" />
+            <Route element={<ProductoPage />} path="/productos/:category/:type/:name" />
+            <Route element={<Navigate to="/" />} path="/*" />
+          </>
+        )}
       </>
     </Routes>
   );

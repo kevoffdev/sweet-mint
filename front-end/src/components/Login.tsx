@@ -1,15 +1,18 @@
 import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 
 import {useAuth} from "../sweet-mint/hooks/useAuth";
 import {Status} from "../sweet-mint/types";
 import {RegisterModel} from "../sweet-mint/modals/RegisterModal";
+import {LoginModal} from "../sweet-mint/modals/LoginModal";
 
 export const Login = () => {
-  const {errorMessage, message, status, registerUser, loginUser, logoutUser, profile} = useAuth();
+  const {status, logoutUser, profile} = useAuth();
+  const [isModalRegisterOpen, setModalRegisterOpen] = useState(false);
   const [isModalLoginOpen, setModalLoginOpen] = useState(false);
 
   useEffect(() => {
-    if (isModalLoginOpen) {
+    if (isModalRegisterOpen || isModalLoginOpen) {
       const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
 
       document.body.style.paddingRight = `${scrollBarWidth}px`;
@@ -18,74 +21,49 @@ export const Login = () => {
       document.body.style.paddingRight = "0px";
       document.body.style.overflow = "auto";
     }
-  }, [isModalLoginOpen]);
-  const openModal = () => setModalLoginOpen(true);
-  const closeModal = () => setModalLoginOpen(false);
+  }, [isModalRegisterOpen, isModalLoginOpen]);
+
+  const isAuthenticated = status === Status.Authenticated;
+  const openRegisterModal = () => setModalRegisterOpen(true);
+  const closeRegisterModal = () => setModalRegisterOpen(false);
+  const openLoginModal = () => setModalLoginOpen(true);
+  const closeLoginModal = () => setModalLoginOpen(false);
 
   return (
     <>
       <nav className="">
         <ul className="flex items-center justify-center gap-3 p-2">
-          {status === Status.Authenticated ? (
+          <li>
+            {isAuthenticated ? (
+              <p className="uppercase">{profile.firstName}</p>
+            ) : (
+              <button className="" onClick={() => openRegisterModal()}>
+                CREAR CUENTA
+              </button>
+            )}
+          </li>
+          <li>|</li>
+          <li>
+            {isAuthenticated ? (
+              <Link className="uppercase" to={"/panel/admin"}>
+                Panel de administración
+              </Link>
+            ) : (
+              <button onClick={() => openLoginModal()}>INICIAR SESIÓN</button>
+            )}
+          </li>
+          {isAuthenticated && (
             <>
-              <li className="">
-                <button
-                  className="uppercase"
-                  onClick={() => {
-                    console.log(1);
-                  }}
-                >
-                  {profile.firstName}
-                </button>
-              </li>
               <li>|</li>
-              <li className="">
-                <button className="" onClick={() => logoutUser()}>
-                  SALIR
-                </button>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <button
-                  className=""
-                  onClick={
-                    () =>
-                      // registerUser({
-                      // firstName: "kevoff",
-                      // lastName: "suvia",
-                      // emailAdress: "kevinsuvia@gmail.com",
-                      // password: "123456",
-                      // confirmedPassword: "123456",
-                      // })
-                      openModal()
-                    // console.log(modalLogin);
-                  }
-                >
-                  CREAR CUENTA
-                </button>
-              </li>
-              <li>|</li>
-              <li>
-                <button
-                  onClick={() =>
-                    loginUser({
-                      emailAdress: "kevinsuvia@gmail.com",
-                      password: "123456",
-                    })
-                  }
-                >
-                  INICIAR SESIÓN
-                </button>
-              </li>
-              {/* {errorMessage && <li>{errorMessage}</li>} /}
-{/ {message && <li>{message}</li>} */}
+              <button>SALIR</button>
             </>
           )}
         </ul>
       </nav>
-      {isModalLoginOpen && <RegisterModel isOpen={isModalLoginOpen} onClose={closeModal} />}
+      {isModalRegisterOpen && (
+        <RegisterModel isOpen={isModalRegisterOpen} onClose={closeRegisterModal} />
+      )}
+      {isModalLoginOpen && <LoginModal isOpen={isModalLoginOpen} onClose={closeLoginModal} />}
     </>
   );
 };

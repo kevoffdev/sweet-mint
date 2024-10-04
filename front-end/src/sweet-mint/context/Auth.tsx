@@ -47,9 +47,9 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
       // });
       // const data = await response.json();
       // console.log(user);
-      const data = await registerRequest(user);
+      // const data = await registerRequest(user);
 
-      console.log(data);
+      // console.log(data);
       // if (!data.ok) {
       //   console.log(data);
 
@@ -57,7 +57,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
       // }
       // console.log(data);
 
-      // return dispatch({type: AUTH_ACTION.REGISTER_USER, value: data.msg});
+      return dispatch({type: AUTH_ACTION.REGISTER_USER, value: "data"});
     } catch (error) {
       console.log(error);
 
@@ -67,14 +67,17 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 
   const loginUser = async (user: LoginUser) => {
     try {
-      const data = await loginRequest(user);
-      // const data = await response.json();
+      // const data = await loginRequest(user);
+      // // const data = await response.json();
 
-      if (!data.ok) {
-        return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
-      }
+      // if (!data.ok) {
+      //   return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
+      // }
 
-      return dispatch({type: AUTH_ACTION.LOGIN_USER, value: data.user});
+      return dispatch({
+        type: AUTH_ACTION.LOGIN_USER,
+        value: {firstName: "fer", lastName: "kev", token: ""},
+      });
     } catch (error) {
       console.log(error);
 
