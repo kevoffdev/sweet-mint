@@ -1,4 +1,4 @@
-import {ReactNode, useEffect, useRef, useState} from "react";
+import {ReactNode} from "react";
 import {Link} from "react-router-dom";
 
 import {linksProductos} from "../../data/links.json";
@@ -8,35 +8,23 @@ import {ArrowDown, ArrowRight} from "../iconsSvg/icons";
 import {SearchUsuario} from "../../components/SearchUsuario";
 import {Login} from "../../components/Login";
 import {CartModal} from "../modals/CartModal";
+import {useModal} from "../hooks/useModal";
 import {useCart} from "../hooks/useCart";
+import {useToggleBodyScroll} from "../hooks/useToggleBodyScroll";
 
 import "../../app.css";
 
 export const Layout = ({children}: {children: ReactNode}) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const data = useRef<null | HTMLDivElement>(null);
   const {productsCart} = useCart();
+  const {isModalOpen, closeModal, openModal} = useModal();
   const productsCartLength = Object.values(productsCart).length;
 
-  useEffect(() => {
-    if (isModalOpen) {
-      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-
-      document.body.style.paddingRight = `${scrollBarWidth}px`;
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.paddingRight = "0px";
-      document.body.style.overflow = "auto";
-    }
-  }, [isModalOpen]);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  useToggleBodyScroll({isModalOpen});
 
   return (
     <>
       {isModalOpen && <CartModal isOpen={isModalOpen} onClose={closeModal} />}
       <div
-        ref={data}
         className={`grid min-h-screen w-full grid-rows-[auto,auto,1fr,auto] ${isModalOpen ? "pointer-events-none opacity-50" : ""}`}
       >
         <header className="relative">

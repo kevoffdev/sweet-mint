@@ -2,7 +2,7 @@ import {Link, useLocation, useParams} from "react-router-dom";
 import {useState} from "react";
 
 import {Layout} from "../components/Layout";
-import {ListaProductos} from "../components/ListaProductos";
+import {ListProducts} from "../components/ListProducts";
 import {SortBySelect} from "../components/SortBySelect";
 import {SortBy} from "../types";
 
@@ -35,7 +35,7 @@ export const CategoryTipoPage = () => {
           <SortBySelect onChange={onChange} />
         </div>
         <div>
-          <ListaProductos category={category} search={search} sortBy={sortBy} type={type} />
+          <ListProducts category={category} search={search} sortBy={sortBy} type={type} />
         </div>
       </div>
     </Layout>

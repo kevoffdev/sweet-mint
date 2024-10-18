@@ -7,27 +7,34 @@ import {SortBy} from "../types/index";
 import {useDebounce} from "../hooks/useDebounce";
 import {getProductsSorted} from "../../helpers/getProductsSorted";
 
-interface ListaProductosProps {
+interface ListProductsProps {
   category?: string;
   type?: string;
   search?: string | null;
   sortBy?: SortBy;
 }
 
-export const ListaProductos = ({category, type, search, sortBy}: ListaProductosProps) => {
+export const ListProducts = ({category, type, search, sortBy}: ListProductsProps) => {
   const {pathname} = useLocation();
 
   const debouncedSearch = useDebounce(search, 500);
 
+  const matchesCategory = (productCategory: string, category: ListProductsProps["category"]) =>
+    category === "productos" || productCategory === category;
+
+  const matchesType = (productType: string, type: ListProductsProps["type"]) =>
+    !type || productType === type;
+
+  const matchesSearch = (productName: string, debouncedSearch: string | null | undefined) =>
+    !debouncedSearch || productName.toLowerCase().includes(debouncedSearch.toLowerCase());
+
   const productsFiltered = useMemo(() => {
     return products.filter((product) => {
-      const categoryMatch = category !== "productos" ? product.categoria === category : true;
-      const searchMatch = debouncedSearch
-        ? product.title.toLowerCase().includes(debouncedSearch.toLowerCase())
-        : true;
-      const typeMatch = type ? product.tipo === type : true;
-
-      return categoryMatch && typeMatch && searchMatch;
+      return (
+        matchesCategory(product.categoria, category) &&
+        matchesType(product.tipo, type) &&
+        matchesSearch(product.title, debouncedSearch)
+      );
     });
   }, [category, type, debouncedSearch]);
 
@@ -50,7 +57,7 @@ export const ListaProductos = ({category, type, search, sortBy}: ListaProductosP
                 >
                   <Link
                     className="relative inline-block h-64 w-64"
-                    to={`/productos/${product.categoria}/${product.tipo}/${title}`}
+                    to={`${pathname}/${product.tipo}/${title}`}
                   >
                     {product.quantity > 0 === false && (
                       <span className="z-5 absolute z-10 flex h-full w-full items-center justify-center font-bold">
@@ -65,7 +72,7 @@ export const ListaProductos = ({category, type, search, sortBy}: ListaProductosP
                   </Link>
                   <Link
                     className="hover:underline hover:decoration-1"
-                    to={`/productos/${product.categoria}/${product.tipo}/${title}`}
+                    to={`${pathname}/${product.tipo}/${title}`}
                   >
                     {product.title}
                   </Link>

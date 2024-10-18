@@ -1,28 +1,13 @@
-import {useEffect, useRef} from "react";
+import {useRef} from "react";
 
 import {useAuth} from "../hooks/useAuth";
+import {useClickOutside} from "../hooks/useClickOutside";
 
 export const LoginModal = ({isOpen, onClose}: {isOpen: boolean; onClose: () => void}) => {
   const {loginUser} = useAuth();
   const modalRef = useRef<null | HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen, onClose]);
+  useClickOutside({modalRef, isOpen, onClose});
 
   return (
     <div className="fixed right-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out">

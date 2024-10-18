@@ -100,7 +100,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
         return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: response.msg});
       }
 
-      return dispatch({type: AUTH_ACTION.LOGIN_USER, value: response.user});
+      dispatch({type: AUTH_ACTION.LOGIN_USER, value: response.user});
     } catch (error) {
       console.error(error);
 

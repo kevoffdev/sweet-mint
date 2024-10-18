@@ -2,10 +2,10 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import {useEffect} from "react";
 
 import {Home} from "../sweet-mint/pages/Home";
-import {Productos} from "../sweet-mint/pages/Productos";
+import {Products} from "../sweet-mint/pages/Products";
 import {CategoryPage} from "../sweet-mint/pages/CategoryPage";
-import {CategoryTipoPage} from "../sweet-mint/pages/ProductoTipoPage";
-import {ProductoPage} from "../sweet-mint/pages/ProductoPage";
+import {CategoryTipoPage} from "../sweet-mint/pages/ProductTypePage";
+import {ProductPage} from "../sweet-mint/pages/ProductPage";
 import {useAuth} from "../sweet-mint/hooks/useAuth";
 import {Status} from "../sweet-mint/types";
 import AdminInventory from "../sweet-mint/pages/AdminInvetory";
@@ -16,6 +16,7 @@ export const AppRouter = () => {
   useEffect(() => {
     checkAuthToken();
   }, []);
+
   if (status === Status.Checking) {
     return <div>Cargando...</div>;
   }
@@ -31,10 +32,10 @@ export const AppRouter = () => {
         ) : (
           <>
             <Route element={<Home />} path="/" />
-            <Route element={<Productos />} path="/productos" />
+            <Route element={<Products />} path="/productos" />
             <Route element={<CategoryPage />} path="/productos/:category" />
             <Route element={<CategoryTipoPage />} path="/productos/:category/:type" />
-            <Route element={<ProductoPage />} path="/productos/:category/:type/:name" />
+            <Route element={<ProductPage />} path="/productos/:category/:type/:name" />
             <Route element={<Navigate to="/" />} path="/*" />
           </>
         )}

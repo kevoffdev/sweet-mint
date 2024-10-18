@@ -3,7 +3,7 @@ import {useState} from "react";
 
 import {SortBy} from "../types";
 
-import {ListaProductos} from "./ListaProductos";
+import {ListProducts} from "./ListProducts";
 import {Layout} from "./Layout";
 import {SortBySelect} from "./SortBySelect";
 
@@ -15,7 +15,7 @@ interface ProductoPageLayoutProps {
 export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.OLDTONEW);
   const search = new URLSearchParams(useLocation().search).get("query");
-
+  const {pathname} = useLocation();
   const onChange = (value: SortBy) => {
     setSortBy(value);
   };
@@ -25,7 +25,7 @@ export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
   return (
     <Layout>
       <div className="mx-auto grid w-full max-w-6xl grid-cols-4 grid-rows-[100px,1fr]">
-        <div className="flex items-center justify-between col-span-4">
+        <div className="col-span-4 flex items-center justify-between">
           <ul className="flex gap-2">
             <li>
               <Link to={"/"}>Incio</Link>
@@ -41,7 +41,7 @@ export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
             {links.map((link) => {
               return (
                 <li key={link}>
-                  <Link className="capitalize" to={`/${path}/${link.toLowerCase()}`}>
+                  <Link className="capitalize" to={`${pathname}/${link.toLowerCase()}`}>
                     {link}
                   </Link>
                 </li>
@@ -50,7 +50,7 @@ export const ProductoPageLayout = ({path, links}: ProductoPageLayoutProps) => {
           </ul>
         </div>
         <div className="col-span-3">
-          <ListaProductos category={path} search={search} sortBy={sortBy} />
+          <ListProducts category={path} search={search} sortBy={sortBy} />
         </div>
       </div>
     </Layout>

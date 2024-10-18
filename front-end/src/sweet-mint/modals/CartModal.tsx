@@ -1,9 +1,10 @@
-import {useEffect, useRef} from "react";
+import {useRef} from "react";
 import {Link} from "react-router-dom";
 
 import products from "../../data/productos.json";
 import {useCart} from "../hooks/useCart";
 import {ProductProps} from "../types";
+import {useClickOutside} from "../hooks/useClickOutside";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -38,23 +39,7 @@ export const CartModal = ({isOpen, onClose}: CartModalProps) => {
     addProduct({id, quantity: -1});
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen, onClose]);
+  useClickOutside({isOpen, modalRef, onClose});
 
   if (!isOpen) return null;
 

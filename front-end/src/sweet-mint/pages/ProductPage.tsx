@@ -5,7 +5,7 @@ import {Layout} from "../components/Layout";
 import products from "../../data/productos.json";
 import {useCart} from "../hooks/useCart";
 
-export const ProductoPage = () => {
+export const ProductPage = () => {
   const [count, setCount] = useState<"" | number>(1);
   const {addProduct, productsCart} = useCart();
   const {name, type, category} = useParams();
