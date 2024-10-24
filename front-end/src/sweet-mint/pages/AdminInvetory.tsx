@@ -1,5 +1,7 @@
 import {useState} from "react";
+
 import "../../adminstyle.css";
+import {useAuth} from "../hooks/useAuth";
 
 const AdminInventory = () => {
   const [products, setProducts] = useState<{name: string; price: number; quantity: number}[]>([]);
@@ -7,6 +9,7 @@ const AdminInventory = () => {
   const [productPrice, setProductPrice] = useState<number | "">("");
   const [productQuantity, setProductQuantity] = useState<number | "">("");
 
+  const {logoutUser, profile} = useAuth();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!productName || productPrice === "" || productQuantity === "") return;
@@ -26,9 +29,15 @@ const AdminInventory = () => {
   return (
     <div className="inventory-page">
       <header className="mx-auto flex w-full max-w-[1200px] items-center justify-between">
-        <span className="text-xl">Sweet Mint</span>
+        <div className="flex flex-col gap-2">
+          <span className="text-xl">Sweet Mint</span>
+          <div className="flex gap-2 text-lg">
+            <span>{profile.firstName}</span>
+            <span>{profile.lastName}</span>
+          </div>
+        </div>
         <h1 className="">Panel de Administración</h1>
-        <button className="text-xl font-medium text-red-500" type="button">
+        <button className="text-xl font-medium text-red-500" type="button" onClick={logoutUser}>
           SALIR
         </button>
       </header>
@@ -79,6 +88,33 @@ const AdminInventory = () => {
                 Agregar Producto
               </button>
             </form>
+          </section>
+
+          <section className="inventory-list">
+            <h2>Inventario Actual</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Precio</th>
+                  <th>Cantidad</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product, index) => (
+                  <tr key={index}>
+                    <td>{product.name}</td>
+                    <td>${product.price.toFixed(2)}</td>
+                    <td>{product.quantity}</td>
+                    <td>
+                      <button className="edit-btn">Editar</button>
+                      <button className="delete-btn">Eliminar</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </section>
 
           <section className="inventory-list">

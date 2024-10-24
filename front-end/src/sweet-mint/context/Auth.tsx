@@ -11,7 +11,6 @@ const initialContextAuth: StateAuth & ActionsAuth = {
   profile: {
     firstName: "",
     lastName: "",
-    token: "",
   },
   checkingCredentials: false,
   registerUser: () => {},
@@ -27,7 +26,6 @@ const initialState = {
   profile: {
     firstName: "",
     lastName: "",
-    token: "",
   },
   checkingCredentials: false,
 };
@@ -39,25 +37,14 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 
   const registerUser = async (user: CreateUser) => {
     try {
-      // const response = await fetch("http://localhost:3000/api/auth/register", {
-      //   method: "POST",
-      //   headers: {"Content-Type": "application/json"},
-      //   body: JSON.stringify(user),
-      //   credentials: "include",
-      // });
-      // const data = await response.json();
-      // console.log(user);
-      // const data = await registerRequest(user);
+      const data = await registerRequest(user);
 
-      // console.log(data);
-      // if (!data.ok) {
-      //   console.log(data);
+      console.log(data);
+      if (!data.ok) {
+        return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
+      }
 
-      //   return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
-      // }
-      // console.log(data);
-
-      return dispatch({type: AUTH_ACTION.REGISTER_USER, value: "data"});
+      return dispatch({type: AUTH_ACTION.REGISTER_USER, value: data.msg});
     } catch (error) {
       console.log(error);
 
@@ -67,16 +54,15 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 
   const loginUser = async (user: LoginUser) => {
     try {
-      // const data = await loginRequest(user);
-      // // const data = await response.json();
+      const data = await loginRequest(user);
 
-      // if (!data.ok) {
-      //   return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
-      // }
+      if (!data.ok || data.user == null) {
+        return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
+      }
 
       return dispatch({
         type: AUTH_ACTION.LOGIN_USER,
-        value: {firstName: "fer", lastName: "kev", token: ""},
+        value: data.user,
       });
     } catch (error) {
       console.log(error);
@@ -85,26 +71,26 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     }
   };
   const logoutUser = async () => {
-    const response = await logoutRequest();
+    const data = await logoutRequest();
 
-    console.log(response);
+    console.log(data);
     checkAuthToken();
   };
 
   const checkAuthToken = async () => {
     dispatch({type: AUTH_ACTION.STATUS_AUTH, value: Status.Checking});
     try {
-      const response = await revalidateJWTRequest();
+      const data = await revalidateJWTRequest();
 
-      if (!response.ok) {
-        return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: response.msg});
+      if (!data.ok || data.user == null) {
+        return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: ""});
       }
 
-      dispatch({type: AUTH_ACTION.LOGIN_USER, value: response.user});
+      return dispatch({type: AUTH_ACTION.LOGIN_USER, value: data.user});
     } catch (error) {
       console.error(error);
 
-      dispatch({type: AUTH_ACTION.STATUS_AUTH, value: Status.NotAuthenticated});
+      return dispatch({type: AUTH_ACTION.STATUS_AUTH, value: Status.NotAuthenticated});
     }
   };
 

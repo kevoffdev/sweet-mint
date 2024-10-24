@@ -20,7 +20,6 @@ export function authReducer(state: StateAuth, action: AuthAction) {
 
       newState.profile.firstName = value.firstName;
       newState.profile.lastName = value.lastName;
-      newState.profile.token = value.token;
       newState.status = Status.Authenticated;
       newState.checkingCredentials = true;
 

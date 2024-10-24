@@ -24,7 +24,6 @@ export interface CartContextProps {
 export interface User {
   firstName: string;
   lastName: string;
-  token: string;
 }
 
 export interface StateAuth {

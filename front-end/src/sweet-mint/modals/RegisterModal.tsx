@@ -1,18 +1,52 @@
-import {useRef} from "react";
+import {FormEvent, useRef} from "react";
 
 import {useAuth} from "../hooks/useAuth";
 import {useClickOutside} from "../hooks/useClickOutside";
 
 export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () => void}) => {
-  const {registerUser} = useAuth();
+  const {registerUser, errorMessage} = useAuth();
   const modalRef = useRef<null | HTMLDivElement>(null);
+
+  function handleForm(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const email = formData.get("email") as string;
+    const name = formData.get("name") as string;
+    const lastName = formData.get("lastName") as string;
+    const password = formData.get("password") as string;
+    const confirmedPassword = formData.get("confirmedPassword") as string;
+
+    if (password.length < 6 && confirmedPassword.length < 6) {
+      console.log("debe tener mas de 6 caracteres");
+
+      return;
+    }
+
+    if (password !== confirmedPassword) {
+      console.log("contraseñas diferentes");
+
+      return;
+    }
+
+    registerUser({
+      emailAdress: email,
+      firstName: name,
+      lastName,
+      password,
+      confirmedPassword,
+    });
+    form.reset();
+    onClose();
+  }
 
   useClickOutside({isOpen, modalRef, onClose});
 
   return (
     <div className="fixed right-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out">
       <div ref={modalRef} className="relative w-[480px] overflow-auto bg-white p-6 shadow-lg">
-        <form className="mx-auto flex max-w-sm flex-col">
+        <form className="mx-auto flex max-w-sm flex-col" onSubmit={handleForm}>
           <div className="flex justify-end">
             <button className="text-gray-500 hover:text-black" onClick={onClose}>
               &times;
@@ -27,6 +61,7 @@ export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () =
               required
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
               id="email"
+              name="email"
               placeholder="Escribe tu email"
               type="email"
             />
@@ -40,6 +75,7 @@ export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () =
                 required
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                 id="name"
+                name="name"
                 placeholder="Escribe tu nombre"
                 type="text"
               />
@@ -53,6 +89,7 @@ export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () =
                 autoComplete="null"
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                 id="lastName"
+                name="lastName"
                 placeholder="Escribe tu apellido"
                 type="text"
               />
@@ -68,6 +105,7 @@ export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () =
                 autoComplete="new-password"
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                 id="password"
+                name="password"
                 placeholder="Escribe tu contraseña"
                 type="password"
               />
@@ -84,6 +122,7 @@ export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () =
                 autoComplete="new-password"
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                 id="repeatassword"
+                name="confirmedPassword"
                 placeholder="Repite tu contraseña"
                 type="password"
               />
@@ -92,15 +131,6 @@ export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () =
           <button
             className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             type="submit"
-            onClick={() =>
-              registerUser({
-                firstName: "kevoff",
-                lastName: "suvia",
-                emailAdress: "kevinsuvia@gmail.com",
-                password: "123456",
-                confirmedPassword: "123456",
-              })
-            }
           >
             Enviar
           </button>

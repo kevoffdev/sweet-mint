@@ -71,8 +71,7 @@ export class UserModel {
         msg: 'login correct',
         user: {
           firstName: user[0].first_name,
-          lastName: user[0].last_name,
-          token
+          lastName: user[0].last_name
         }
       })
     } catch (error) {
@@ -85,8 +84,9 @@ export class UserModel {
   }
 
   static async logout (req, res) {
-    return res.clearCookie('access_token').json({
-      msg: 'Logout successful'
+    return res.clearCookie('access_token').status(200).json({
+      msg: 'Logout successful',
+      ok: true
     })
   }
 
@@ -107,8 +107,7 @@ export class UserModel {
         msg: 'login correct',
         user: {
           firstName: data[0].first_name,
-          lastName: data[0].last_name,
-          token
+          lastName: data[0].last_name
         }
       })
     } catch (error) {

@@ -31,19 +31,24 @@
 }
 
 .inventory-page .inventory-grid {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
   margin-top: 4rem;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.inventory-page .inventory-grid > section:nth-child(3) {
+  grid-column: span 2;
+  grid-row: span;
 }
 
 .inventory-page .product-form,
 .inventory-page .inventory-list {
+  width: 100%;
   background-color: white;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 48%;
 }
 
 .inventory-page h2 {
@@ -95,14 +100,12 @@
 .inventory-page .inventory-list td {
   padding: 12px;
   border-bottom: 1px solid #e2e8f0;
-  /* text-align: left; */
 }
 
 .inventory-page .inventory-list th {
   background-color: #edf2f7;
   font-size: 1em;
   font-weight: bold;
-  /* text-align: center; */
 }
 
 .inventory-page .edit-btn,
