@@ -4,6 +4,7 @@ import { PORT } from './config.js'
 import cors from 'cors'
 import { authRouter } from './routes/auth.js'
 import { validateJWT } from './middlewares/validateJWT.js'
+import { productsRouter } from './routes/products.js'
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use(cookieParser())
 app.disable('x-powered-by')
 
 app.use('/api/auth', authRouter)
+app.use('/api/products', productsRouter)
 app.get('/protected', validateJWT, (req, res) => {
   const { user } = req.session
   console.log(user)
