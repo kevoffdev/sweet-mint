@@ -22,11 +22,15 @@ export class UserModel {
         })
       }
 
+      const [userCountResult] = await connection.query('SELECT COUNT(*) AS count FROM users')
+      console.log(userCountResult)
+      const role = userCountResult[0].count === 0 ? 'admin' : 'client'
+      console.log(role)
       const hassedPassword = await bcrypt.hash(password, 10)
 
       await connection.query(`
-        INSERT INTO users (first_name,last_name,user_password,email_adress) VALUES (?,?,?,?);`
-      , [firstName, lastName, hassedPassword, emailAdress]
+        INSERT INTO users (first_name,last_name,user_password,email_adress,role) VALUES (?,?,?,?,?);`
+      , [firstName, lastName, hassedPassword, emailAdress, role]
       )
 
       return res.status(201).json({
@@ -45,7 +49,7 @@ export class UserModel {
   static async login (req, res) {
     const { password, emailAdress } = req.body
     try {
-      const [user] = await connection.query('SELECT first_name,last_name,email_adress,phonenumber,user_password,BIN_TO_UUID(user_id) user_id FROM users WHERE email_adress = ?', [emailAdress])
+      const [user] = await connection.query('SELECT first_name,last_name,email_adress,phonenumber,user_password,role,BIN_TO_UUID(user_id) user_id FROM users WHERE email_adress = ?', [emailAdress])
       if (user.length === 0) {
         return res.status(409).json({
           ok: false,
@@ -71,7 +75,8 @@ export class UserModel {
         msg: 'login correct',
         user: {
           firstName: user[0].first_name,
-          lastName: user[0].last_name
+          lastName: user[0].last_name,
+          role: user[0].role
         }
       })
     } catch (error) {
@@ -94,8 +99,8 @@ export class UserModel {
     const { user } = req.session
     try {
       const [data] = await connection
-        .query('SELECT first_name,last_name,email_adress,phonenumber,user_password,BIN_TO_UUID(user_id) user_id FROM users WHERE BIN_TO_UUID(user_id) = ?', [user.id])
-
+        .query('SELECT first_name,last_name,email_adress,phonenumber,role,user_password,BIN_TO_UUID(user_id) user_id FROM users WHERE BIN_TO_UUID(user_id) = ?', [user.id])
+      console.log(data)
       const token = await generateJWT(user.id, user.username)
       res.cookie('access_token', token, {
         httpOnly: true,
@@ -107,7 +112,8 @@ export class UserModel {
         msg: 'login correct',
         user: {
           firstName: data[0].first_name,
-          lastName: data[0].last_name
+          lastName: data[0].last_name,
+          role: data[0].role
         }
       })
     } catch (error) {
