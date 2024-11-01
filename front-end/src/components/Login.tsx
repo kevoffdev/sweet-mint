@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 
 import {useAuth} from "../sweet-mint/hooks/useAuth";
-import {Status} from "../sweet-mint/types";
+import {AUTH_ROLE, Status} from "../sweet-mint/types";
 import {RegisterModel} from "../sweet-mint/modals/RegisterModal";
 import {LoginModal} from "../sweet-mint/modals/LoginModal";
 import {useModal} from "../sweet-mint/hooks/useModal";
@@ -22,14 +22,13 @@ export const Login = () => {
 
   useToggleBodyScroll({isModalOpen: isModalLoginOpen});
   useToggleBodyScroll({isModalOpen: isModalRegisterOpen});
-
-  const isAuthenticated = status === Status.Authenticated;
+  const isAuthenticatedAdmin = status === Status.Authenticated && profile.role === AUTH_ROLE.CLIENT;
 
   return (
     <>
       <nav className="">
         <ul className="flex items-center justify-center gap-3 p-2">
-          {isAuthenticated ? (
+          {isAuthenticatedAdmin ? (
             <>
               <li>
                 <p className="uppercase">{profile.firstName}</p>

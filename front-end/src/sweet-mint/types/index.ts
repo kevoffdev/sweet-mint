@@ -21,9 +21,16 @@ export interface CartContextProps {
   removeProduct: (id: ProductProps["id"]) => void;
 }
 
+export enum AUTH_ROLE {
+  ADMIN = "admin",
+  CLIENT = "client",
+  NOT_AUTHENTICATED = "NOT_AUTHENTICATED",
+}
+
 export interface User {
   firstName: string;
   lastName: string;
+  role: AUTH_ROLE;
 }
 
 export interface StateAuth {

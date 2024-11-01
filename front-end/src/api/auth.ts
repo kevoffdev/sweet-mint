@@ -1,4 +1,4 @@
-import {CreateUser, LoginUser} from "../sweet-mint/types";
+import {AUTH_ROLE, CreateUser, LoginUser} from "../sweet-mint/types";
 
 interface IResponseRequest {
   ok: boolean;
@@ -11,6 +11,7 @@ interface IResponseLoginRequest extends IResponseRequest {
   user?: {
     firstName: string;
     lastName: string;
+    role: AUTH_ROLE;
   };
 }
 

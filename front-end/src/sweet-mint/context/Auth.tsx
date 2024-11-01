@@ -1,7 +1,15 @@
 import {createContext, ReactNode, useReducer} from "react";
 
 import {authReducer} from "../reducers/auth";
-import {ActionsAuth, AUTH_ACTION, CreateUser, LoginUser, StateAuth, Status} from "../types";
+import {
+  ActionsAuth,
+  AUTH_ACTION,
+  AUTH_ROLE,
+  CreateUser,
+  LoginUser,
+  StateAuth,
+  Status,
+} from "../types";
 import {loginRequest, logoutRequest, registerRequest, revalidateJWTRequest} from "../../api/auth";
 
 const initialContextAuth: StateAuth & ActionsAuth = {
@@ -11,6 +19,7 @@ const initialContextAuth: StateAuth & ActionsAuth = {
   profile: {
     firstName: "",
     lastName: "",
+    role: AUTH_ROLE.NOT_AUTHENTICATED,
   },
   checkingCredentials: false,
   registerUser: () => {},
@@ -26,6 +35,7 @@ const initialState = {
   profile: {
     firstName: "",
     lastName: "",
+    role: AUTH_ROLE.NOT_AUTHENTICATED,
   },
   checkingCredentials: false,
 };
@@ -39,7 +49,6 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     try {
       const data = await registerRequest(user);
 
-      console.log(data);
       if (!data.ok) {
         return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
       }
@@ -56,6 +65,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     try {
       const data = await loginRequest(user);
 
+      console.log(data);
       if (!data.ok || data.user == null) {
         return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: data.msg});
       }

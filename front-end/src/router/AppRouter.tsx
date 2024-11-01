@@ -7,11 +7,11 @@ import {CategoryPage} from "../sweet-mint/pages/CategoryPage";
 import {CategoryTipoPage} from "../sweet-mint/pages/ProductTypePage";
 import {ProductPage} from "../sweet-mint/pages/ProductPage";
 import {useAuth} from "../sweet-mint/hooks/useAuth";
-import {Status} from "../sweet-mint/types";
+import {AUTH_ROLE, Status} from "../sweet-mint/types";
 import AdminInventory from "../sweet-mint/pages/AdminInvetory";
 
 export const AppRouter = () => {
-  const {checkAuthToken, status} = useAuth();
+  const {checkAuthToken, status, profile} = useAuth();
 
   useEffect(() => {
     checkAuthToken();
@@ -24,7 +24,7 @@ export const AppRouter = () => {
   return (
     <Routes>
       <>
-        {status === Status.Authenticated ? (
+        {status === Status.Authenticated && profile.role === AUTH_ROLE.ADMIN ? (
           <>
             <Route element={<AdminInventory />} path="/panel/admin" />
             <Route element={<Navigate to="/panel/admin" />} path="/*" />

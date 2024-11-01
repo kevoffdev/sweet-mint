@@ -34,13 +34,19 @@
   margin-top: 4rem;
   display: grid;
   gap: 2rem;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  /* grid-template-rows: repeat(2, 1fr); */
 }
-.inventory-page .inventory-grid > section:nth-child(3) {
+
+.inventory-page .inventory-grid > section:nth-child(2) {
   grid-column: span 2;
   grid-row: span;
 }
+
+/* .inventory-page .inventory-grid > section:nth-child(3) {
+  grid-column: span 3;
+  grid-row: span;
+} */
 
 .inventory-page .product-form,
 .inventory-page .inventory-list {

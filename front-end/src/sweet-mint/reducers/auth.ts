@@ -1,4 +1,4 @@
-import {AUTH_ACTION, AuthAction, StateAuth, Status} from "../types";
+import {AUTH_ACTION, AUTH_ROLE, AuthAction, StateAuth, Status} from "../types";
 
 export function authReducer(state: StateAuth, action: AuthAction) {
   switch (action.type) {
@@ -17,6 +17,12 @@ export function authReducer(state: StateAuth, action: AuthAction) {
     case AUTH_ACTION.LOGIN_USER: {
       const value = action.value;
       const newState = structuredClone(state);
+
+      if (value.role === AUTH_ROLE.ADMIN) {
+        newState.profile.role = AUTH_ROLE.ADMIN;
+      } else {
+        newState.profile.role = AUTH_ROLE.CLIENT;
+      }
 
       newState.profile.firstName = value.firstName;
       newState.profile.lastName = value.lastName;
