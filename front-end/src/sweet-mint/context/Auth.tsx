@@ -30,6 +30,7 @@ const initialContextAuth: StateAuth & ActionsAuth = {
   checkAuthToken: () => {},
   logoutUser: () => {},
   getProducts: () => {},
+  cleanErrorMessage: () => {},
 };
 
 const initialState = {
@@ -133,12 +134,16 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
       // return dispatch({type: AUTH_ACTION.STATUS_AUTH, value: Status.NotAuthenticated});
     }
   };
-
+  const cleanErrorMessage = () => {
+    // console.log(state);
+    return dispatch({type: AUTH_ACTION.CLEAN_ERRORMESSAGE, value: state});
+  };
   const {status, errorMessage, message, profile, checkingCredentials, products} = state;
 
   return (
     <AuthContext.Provider
       value={{
+        cleanErrorMessage,
         products,
         status,
         errorMessage,

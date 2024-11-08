@@ -87,15 +87,15 @@ export const ListProducts = ({category, type, search, sortBy}: ListProductsProps
           </section>
           {pathname === "/" ? (
             <div className="mb-10 text-center">
-              <Link className="bg-black px-8 py-3 uppercase text-white" to="/productos">
+              {/* <Link className="px-8 py-3 text-white uppercase bg-black" to="/productos">
                 Ver más
-              </Link>
+              </Link> */}
             </div>
           ) : (
             <div className="m-16 flex items-center justify-center">
-              <button className="flex items-center justify-center bg-black px-8 py-3 text-white">
+              {/* <button className="flex items-center justify-center px-8 py-3 text-white bg-black">
                 {<ArrowDown size={5} />}
-              </button>
+              </button> */}
             </div>
           )}
         </div>

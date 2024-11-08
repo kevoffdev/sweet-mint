@@ -1,10 +1,11 @@
-import {FormEvent, useRef} from "react";
+import {FormEvent, useEffect, useRef} from "react";
+import {Toaster, toast} from "sonner";
 
 import {useAuth} from "../hooks/useAuth";
 import {useClickOutside} from "../hooks/useClickOutside";
 
 export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () => void}) => {
-  const {registerUser, errorMessage} = useAuth();
+  const {registerUser, errorMessage, cleanErrorMessage} = useAuth();
   const modalRef = useRef<null | HTMLDivElement>(null);
 
   function handleForm(event: FormEvent<HTMLFormElement>) {
@@ -30,6 +31,7 @@ export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () =
       return;
     }
 
+    toast.success("Cuenta registrada");
     registerUser({
       emailAdress: email,
       firstName: name,
@@ -38,13 +40,19 @@ export const RegisterModel = ({isOpen, onClose}: {isOpen: boolean; onClose: () =
       confirmedPassword,
     });
     form.reset();
-    onClose();
+    // onClose();
   }
-
+  useEffect(() => {
+    if (errorMessage?.length) {
+      toast.error(errorMessage);
+    }
+    cleanErrorMessage();
+  }, [errorMessage]);
   useClickOutside({isOpen, modalRef, onClose});
 
   return (
     <div className="fixed right-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out">
+      <Toaster />
       <div ref={modalRef} className="relative w-[480px] overflow-auto bg-white p-6 shadow-lg">
         <form className="mx-auto flex max-w-sm flex-col" onSubmit={handleForm}>
           <div className="flex justify-end">

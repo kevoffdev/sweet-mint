@@ -49,6 +49,12 @@ export function authReducer(state: StateAuth, action: AuthAction) {
       return {...value, products: state.products};
     }
 
+    case AUTH_ACTION.CLEAN_ERRORMESSAGE: {
+      const value = action.value;
+
+      return {...value, errorMessage: ""};
+    }
+
     default:
       throw Error("uknow action");
   }

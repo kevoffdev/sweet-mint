@@ -14,6 +14,7 @@ export function useAuth() {
     logoutUser,
     checkAuthToken,
     getProducts,
+    cleanErrorMessage,
   } = useContext(AuthContext);
 
   return {
@@ -27,5 +28,6 @@ export function useAuth() {
     logoutUser,
     checkAuthToken,
     getProducts,
+    cleanErrorMessage,
   };
 }

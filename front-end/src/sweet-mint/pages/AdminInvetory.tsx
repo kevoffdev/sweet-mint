@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import {Toaster, toast} from "sonner";
 
 import "../../adminstyle.css";
 import {useAuth} from "../hooks/useAuth";
@@ -77,7 +78,7 @@ const AdminInventory = () => {
     const data = await createProductRequest(newProduct);
 
     if (!data.ok) return;
-
+    toast.success("Producto agregado");
     setProductForm({title: "", price: "", category: "", type: "", image: "", quantity: ""});
     setProducts((prevProducts) => [...prevProducts, newProduct]);
   };
@@ -165,7 +166,7 @@ const AdminInventory = () => {
       }
     }
     getProduct();
-  }, [orders]);
+  }, [orders, products]);
 
   useEffect(() => {
     async function getOrders() {
@@ -193,6 +194,7 @@ const AdminInventory = () => {
 
   return (
     <div className="inventory-page">
+      <Toaster />
       <header className="mx-auto flex w-full max-w-[1200px] items-center justify-between">
         <div className="flex flex-col gap-2">
           <span className="text-xl">Sweet Mint</span>

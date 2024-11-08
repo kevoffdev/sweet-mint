@@ -30,6 +30,7 @@ export const ProductPage = () => {
     if (status === Status.NotAuthenticated) {
       return toast.warning("Debes autenticarte para comprar productos");
     }
+    toast.success("Producto agregado al carrito");
     addProduct({id, quantity});
     setCount(1);
   };
@@ -48,7 +49,7 @@ export const ProductPage = () => {
 
   return (
     <Layout>
-      <Toaster />
+      <Toaster richColors />
       <article className="mx-auto my-16 grid max-w-6xl grid-cols-[1fr,1fr] gap-4">
         <div className="flex flex-col gap-6">
           <div className="flex gap-4">
@@ -59,7 +60,7 @@ export const ProductPage = () => {
               src={product?.image}
             />
           </div>
-          <p>Goma blanda rellena, sabor frutal</p>
+          {/* <p>Goma blanda rellena, sabor frutal</p> */}
         </div>
         <section className="flex flex-col gap-4 px-12">
           <ul className="flex flex-wrap">

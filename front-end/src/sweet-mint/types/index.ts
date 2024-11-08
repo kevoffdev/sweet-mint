@@ -52,6 +52,7 @@ export interface ActionsAuth {
   checkAuthToken: () => void;
   logoutUser: () => void;
   getProducts: () => void;
+  cleanErrorMessage: () => void;
 }
 
 export enum Status {
@@ -77,6 +78,7 @@ export enum AUTH_ACTION {
   STATUS_AUTH = "STATUS_AUTH",
   GET_PRODUCTS = "GET_PRODUCTS",
   LOGOUT_USER = "LOGOUT_USER",
+  CLEAN_ERRORMESSAGE = "CLEAN_ERRORMESSAGE",
 }
 
 export type AuthAction =
@@ -86,4 +88,5 @@ export type AuthAction =
   | {type: AUTH_ACTION.STATUS_AUTH; value: Status}
   | {type: AUTH_ACTION.STATUS_AUTH; value: Status}
   | {type: AUTH_ACTION.GET_PRODUCTS; value: IProduct[]}
-  | {type: AUTH_ACTION.LOGOUT_USER; value: StateAuth};
+  | {type: AUTH_ACTION.LOGOUT_USER; value: StateAuth}
+  | {type: AUTH_ACTION.CLEAN_ERRORMESSAGE; value: StateAuth};

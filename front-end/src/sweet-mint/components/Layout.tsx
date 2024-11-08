@@ -97,9 +97,9 @@ export const Layout = ({children}: {children: ReactNode}) => {
               </ul>
             </li>
             <li className="hover:bg-gray-100">
-              <Link className="block h-full w-full" to="/">
+              {/* <Link className="block w-full h-full" to="/">
                 Concacto
-              </Link>
+              </Link> */}
             </li>
             <li className="hover:bg-gray-100">
               <button
