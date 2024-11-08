@@ -1,14 +1,17 @@
 import {Link, useParams} from "react-router-dom";
 import {useState} from "react";
+import {Toaster, toast} from "sonner";
 
 import {Layout} from "../components/Layout";
-import products from "../../data/productos.json";
 import {useCart} from "../hooks/useCart";
+import {useAuth} from "../hooks/useAuth";
+import {Status} from "../types";
 
 export const ProductPage = () => {
   const [count, setCount] = useState<"" | number>(1);
   const {addProduct, productsCart} = useCart();
   const {name, type, category} = useParams();
+  const {products, status} = useAuth();
 
   const productNameSanitized = name?.split("-").join(" ");
   const product = products.find((product) => product.title.toLowerCase() === productNameSanitized);
@@ -22,8 +25,11 @@ export const ProductPage = () => {
   const stockAvailabe = productCart ? product.quantity - productCart.quantity : product.quantity;
   const stock = product.quantity > 0 && stockAvailabe > 0;
 
-  const handleClickAddProductCart = ({id, quantity}: {id: number; quantity: number | ""}) => {
+  const handleClickAddProductCart = ({id, quantity}: {id: string; quantity: number | ""}) => {
     if (quantity === "" || quantity > stockAvailabe || quantity <= 0) return;
+    if (status === Status.NotAuthenticated) {
+      return toast.warning("Debes autenticarte para comprar productos");
+    }
     addProduct({id, quantity});
     setCount(1);
   };
@@ -42,6 +48,7 @@ export const ProductPage = () => {
 
   return (
     <Layout>
+      <Toaster />
       <article className="mx-auto my-16 grid max-w-6xl grid-cols-[1fr,1fr] gap-4">
         <div className="flex flex-col gap-6">
           <div className="flex gap-4">

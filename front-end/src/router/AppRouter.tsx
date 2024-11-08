@@ -11,9 +11,10 @@ import {AUTH_ROLE, Status} from "../sweet-mint/types";
 import AdminInventory from "../sweet-mint/pages/AdminInvetory";
 
 export const AppRouter = () => {
-  const {checkAuthToken, status, profile} = useAuth();
+  const {checkAuthToken, getProducts, status, profile} = useAuth();
 
   useEffect(() => {
+    getProducts();
     checkAuthToken();
   }, []);
 

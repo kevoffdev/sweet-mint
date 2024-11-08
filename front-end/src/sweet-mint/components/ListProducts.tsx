@@ -1,11 +1,12 @@
 import {useMemo} from "react";
 import {Link, useLocation} from "react-router-dom";
 
-import products from "../../data/productos.json";
 import {ArrowDown} from "../iconsSvg/icons";
 import {SortBy} from "../types/index";
 import {useDebounce} from "../hooks/useDebounce";
 import {getProductsSorted} from "../../helpers/getProductsSorted";
+import {IProduct} from "../pages/AdminInvetory";
+import {useAuth} from "../hooks/useAuth";
 
 interface ListProductsProps {
   category?: string;
@@ -16,14 +17,17 @@ interface ListProductsProps {
 
 export const ListProducts = ({category, type, search, sortBy}: ListProductsProps) => {
   const {pathname} = useLocation();
+  const {products} = useAuth();
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const matchesCategory = (productCategory: string, category: ListProductsProps["category"]) =>
-    category === "productos" || productCategory === category;
+  const matchesCategory = (productCategory: string, category?: IProduct["category"]) => {
+    return category === "productos" || productCategory === category;
+  };
 
-  const matchesType = (productType: string, type: ListProductsProps["type"]) =>
-    !type || productType === type;
+  const matchesType = (productType: string, type?: IProduct["type"]) => {
+    return !type || productType === type;
+  };
 
   const matchesSearch = (productName: string, debouncedSearch: string | null | undefined) =>
     !debouncedSearch || productName.toLowerCase().includes(debouncedSearch.toLowerCase());
@@ -31,8 +35,8 @@ export const ListProducts = ({category, type, search, sortBy}: ListProductsProps
   const productsFiltered = useMemo(() => {
     return products.filter((product) => {
       return (
-        matchesCategory(product.categoria, category) &&
-        matchesType(product.tipo, type) &&
+        matchesCategory(product.category.toLowerCase(), category) &&
+        matchesType(product.type.toLowerCase(), type) &&
         matchesSearch(product.title, debouncedSearch)
       );
     });
@@ -57,7 +61,7 @@ export const ListProducts = ({category, type, search, sortBy}: ListProductsProps
                 >
                   <Link
                     className="relative inline-block h-64 w-64"
-                    to={`${pathname}/${product.tipo}/${title}`}
+                    to={`/productos/${category}/${product.type.toLowerCase()}/${title.toLowerCase()}`}
                   >
                     {product.quantity > 0 === false && (
                       <span className="z-5 absolute z-10 flex h-full w-full items-center justify-center font-bold">
@@ -72,7 +76,7 @@ export const ListProducts = ({category, type, search, sortBy}: ListProductsProps
                   </Link>
                   <Link
                     className="hover:underline hover:decoration-1"
-                    to={`${pathname}/${product.tipo}/${title}`}
+                    to={`${pathname}/${product.type}/${title}`}
                   >
                     {product.title}
                   </Link>

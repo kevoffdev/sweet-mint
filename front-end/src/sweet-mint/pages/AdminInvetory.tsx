@@ -10,6 +10,7 @@ import {
 } from "../../api/products";
 import {ProductModal} from "../modals/ProductModal";
 import {useModal} from "../hooks/useModal";
+import {getOrderItemsRequest, getOrdersRequest, IOrder, IOrderItem} from "../../api/orders";
 
 export interface IProduct {
   id: string;
@@ -33,10 +34,15 @@ const AdminInventory = () => {
   });
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   const {isModalOpen, openModal, closeModal} = useModal();
+  const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
+  const [orders, setOrders] = useState<IOrder[]>([]);
+  const [ordersItems, setOrdersItems] = useState<IOrderItem[]>([]);
 
   const {logoutUser, profile} = useAuth();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
+  ) => {
     const {name, value} = e.target;
 
     setProductForm((prevForm) => ({
@@ -63,7 +69,7 @@ const AdminInventory = () => {
 
     const data = await createProductRequest(newProduct);
 
-    if (!data.ok) return console.log(data);
+    if (!data.ok) return;
 
     setProductForm({title: "", price: "", category: "", type: "", image: "", quantity: ""});
     setProducts((prevProducts) => [...prevProducts, newProduct]);
@@ -94,6 +100,17 @@ const AdminInventory = () => {
     closeEditModal();
   };
 
+  const openOrderDetails = async (order: IOrder) => {
+    const data = await getOrderItemsRequest(order.order_id);
+
+    console.log(data);
+    if (data.ok) {
+      setOrdersItems(data.items);
+
+      setSelectedOrder(order);
+    }
+  };
+
   const handleModalEditProduct = (product: IProduct) => {
     setSelectedProduct(product);
     openModal();
@@ -102,6 +119,10 @@ const AdminInventory = () => {
   const closeEditModal = () => {
     closeModal();
     setSelectedProduct(null);
+  };
+  const closeOrderDetails = () => {
+    setOrdersItems([]);
+    setSelectedOrder(null);
   };
 
   useEffect(() => {
@@ -113,6 +134,30 @@ const AdminInventory = () => {
       }
     }
     getProduct();
+  }, []);
+
+  useEffect(() => {
+    async function getOrders() {
+      const data = await getOrdersRequest();
+
+      console.log(data.orders);
+      if (data.ok) {
+        const orders = data.orders.map((order) => {
+          if (order.order_date) {
+            const dateTime = order.order_date;
+            const [date, time] = dateTime.split("T");
+            const formattedDateTime = `${date} ${time.split(".")[0]}`; // Resultado: "2024-11-08 05:39:58"
+
+            return {...order, order_date: formattedDateTime};
+          }
+
+          return order;
+        });
+
+        setOrders(orders);
+      }
+    }
+    getOrders();
   }, []);
 
   return (
@@ -161,26 +206,43 @@ const AdminInventory = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="product-category">Categoria:</label>
-                <input
-                  required
-                  id="product-category"
-                  name="category"
-                  type="text"
-                  value={productForm.category}
-                  onChange={handleChange}
-                />
+                <label htmlFor="category">Categoria:</label>
+                <div className="grid grid-cols-3">
+                  <label className="flex items-center">
+                    Nacional
+                    <input
+                      name="category"
+                      type="radio"
+                      value="nacionales"
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <label className="flex items-center">
+                    Importado
+                    <input
+                      name="category"
+                      type="radio"
+                      value="importados"
+                      onChange={handleChange}
+                    />
+                  </label>
+                </div>
               </div>
               <div className="form-group">
                 <label htmlFor="product-type">Tipo:</label>
-                <input
+                <select
                   required
                   id="product-type"
                   name="type"
-                  type="text"
                   value={productForm.type}
                   onChange={handleChange}
-                />
+                >
+                  <option value="">Selecciona un tipo</option>
+                  <option value="Bebidas">Bebidas</option>
+                  <option value="Snack">Snack</option>
+                  <option value="Chocolate">Chocolate</option>
+                  <option value="Varios">Varios</option>
+                </select>
               </div>
               <div className="form-group">
                 <label htmlFor="product-image">Imagen:</label>
@@ -191,6 +253,7 @@ const AdminInventory = () => {
                   type="text"
                   value={productForm.image}
                   onChange={handleChange}
+                  // onChange={handleImageUpload}
                 />
               </div>
               <div className="form-group">
@@ -232,7 +295,9 @@ const AdminInventory = () => {
                     <td>${product.price}</td>
                     <td>{product.category}</td>
                     <td>{product.type}</td>
-                    <td>{product.image.slice(0, 5)}</td>
+                    <td className="h-8 w-8">
+                      <img alt={product.title} src={product.image} />
+                    </td>
                     <td>{product.quantity}</td>
                     <td>
                       <button className="edit-btn" onClick={() => handleModalEditProduct(product)}>
@@ -250,6 +315,35 @@ const AdminInventory = () => {
               </tbody>
             </table>
           </section>
+          <section className="order-report">
+            <h2>Reporte de pedidos</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Codigo de pedido</th>
+                  <th>Fecha y hora</th>
+                  <th>Estatus</th>
+                  <th>Id del cliente</th>
+                  <th>Total</th>
+                  <th>Detalles</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order) => (
+                  <tr key={order.order_id}>
+                    <td>{order.order_id}</td>
+                    <td>{order.order_date}</td>
+                    <td>{order.status}</td>
+                    <td>{order.user_id}</td>
+                    <td>${order.total_amount}</td>
+                    <td>
+                      <button onClick={() => openOrderDetails(order)}>Ver detalles</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
         </div>
         {isModalOpen && selectedProduct != null && (
           <ProductModal
@@ -257,6 +351,44 @@ const AdminInventory = () => {
             handleEditProduct={handleEditProduct}
             product={selectedProduct}
           />
+        )}
+        {selectedOrder && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>Detalles del Pedido: {selectedOrder?.order_id}</h2>
+              <p>
+                <strong>Fecha:</strong> {selectedOrder?.order_date}
+              </p>
+              <p>
+                <strong>Estatus:</strong> {selectedOrder?.status}
+              </p>
+
+              {ordersItems.map((item) => (
+                <div key={item.product_id} className="flex gap-2">
+                  <p>
+                    <strong>Producto:</strong> {item.title}
+                  </p>
+                  <p>
+                    <strong>Precio:</strong>${item.price}
+                  </p>
+                  <p>
+                    <strong>Cantidad:</strong> {item.quantity}
+                  </p>
+                </div>
+              ))}
+
+              <p>
+                <strong>Total:</strong> ${selectedOrder?.total_amount}
+              </p>
+              <div className="flex items-center justify-center gap-2">
+                <button className="btn-confirm">Confirmar</button>
+                <button className="btn-cancelate">Cancelar pedido</button>
+                <button className="btn-close" onClick={closeOrderDetails}>
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </main>
       <footer>

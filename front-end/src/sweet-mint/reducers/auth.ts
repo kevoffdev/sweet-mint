@@ -27,13 +27,28 @@ export function authReducer(state: StateAuth, action: AuthAction) {
       newState.profile.firstName = value.firstName;
       newState.profile.lastName = value.lastName;
       newState.status = Status.Authenticated;
+      newState.profile.user_id = value.user_id;
       newState.checkingCredentials = true;
 
       return newState;
     }
 
-    case AUTH_ACTION.STATUS_AUTH:
+    case AUTH_ACTION.STATUS_AUTH: {
       return {...state, status: action.value};
+    }
+
+    case AUTH_ACTION.GET_PRODUCTS: {
+      const value = action.value;
+
+      return {...state, products: value};
+    }
+
+    case AUTH_ACTION.LOGOUT_USER: {
+      const value = action.value;
+
+      return {...value, products: state.products};
+    }
+
     default:
       throw Error("uknow action");
   }

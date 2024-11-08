@@ -23,9 +23,9 @@ export class UserModel {
       }
 
       const [userCountResult] = await connection.query('SELECT COUNT(*) AS count FROM users')
-      console.log(userCountResult)
+      // console.log(userCountResult)
       const role = userCountResult[0].count === 0 ? 'admin' : 'client'
-      console.log(role)
+      // console.log(role)
       const hassedPassword = await bcrypt.hash(password, 10)
 
       await connection.query(`
@@ -76,7 +76,8 @@ export class UserModel {
         user: {
           firstName: user[0].first_name,
           lastName: user[0].last_name,
-          role: user[0].role
+          role: user[0].role,
+          user_id: user[0].user_id
         }
       })
     } catch (error) {
@@ -113,7 +114,8 @@ export class UserModel {
         user: {
           firstName: data[0].first_name,
           lastName: data[0].last_name,
-          role: data[0].role
+          role: data[0].role,
+          user_id: data[0].user_id
         }
       })
     } catch (error) {

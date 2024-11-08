@@ -35,7 +35,7 @@
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(3, 1fr);
-  /* grid-template-rows: repeat(2, 1fr); */
+  grid-template-rows: repeat(2, 1fr);
 }
 
 .inventory-page .inventory-grid > section:nth-child(2) {
@@ -43,10 +43,10 @@
   grid-row: span;
 }
 
-/* .inventory-page .inventory-grid > section:nth-child(3) {
+.inventory-page .inventory-grid > section:nth-child(3) {
   grid-column: span 3;
   grid-row: span;
-} */
+}
 
 .inventory-page .product-form,
 .inventory-page .inventory-list {
@@ -148,4 +148,172 @@
   margin-top: 20px;
   color: #a0aec0;
   font-size: 0.9em;
+}
+
+/*Estilos para la sección del reporte de pedidos */
+
+.order-report {
+  margin-top: 20px;
+  padding: 20px;
+  height: 450px; 
+  overflow-y: auto;
+  background-color: #f5f5f5; 
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+
+.order-report table {
+  width: 100%;
+  margin: 0 auto;
+  font-size: 16px;
+  border-collapse: collapse;
+  background-color: #fff; 
+  border-radius: 8px;
+  overflow: hidden; 
+}
+
+
+.order-report table th {
+  background-color: #4a90e2; 
+  color: #fff; 
+  padding: 12px 10px;
+  text-align: left;
+  font-weight: 600;
+}
+
+
+.order-report table td {
+  padding: 12px 10px;
+  color: #333; 
+  border-bottom: 1px solid #ddd; 
+}
+
+
+.order-report table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+
+.order-report table tr:hover {
+  background-color: #e6f7ff; 
+}
+
+
+.order-report button {
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #4a90e2; 
+  background-color: transparent;
+  border: 1px solid #4a90e2;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+.order-report button:hover {
+  background-color: #4a90e2; 
+  color: #fff; 
+}
+
+/* Estilos del modal */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%; 
+  max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+.modal-content .btn-close {
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-top: 20px; 
+  align-self: center; 
+}
+
+.modal-content .btn-close:hover {
+  background-color: black;
+}
+
+.modal-content .btn-confirm {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-top: 20px; 
+  align-self: center; 
+}
+
+.modal-content .btn-confirm:hover {
+  background-color: green;
+}
+
+.modal-content .btn-cancelate {
+  background-color: #FF5F57;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-top: 20px; 
+  align-self: center; 
+}
+
+.modal-content .btn-cancelate:hover {
+  background-color: #FF3B30;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
 }

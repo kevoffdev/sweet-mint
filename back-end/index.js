@@ -5,6 +5,7 @@ import cors from 'cors'
 import { authRouter } from './routes/auth.js'
 import { validateJWT } from './middlewares/validateJWT.js'
 import { productsRouter } from './routes/products.js'
+import { orderRouter } from './routes/orders.js'
 
 const app = express()
 
@@ -21,6 +22,8 @@ app.disable('x-powered-by')
 
 app.use('/api/auth', authRouter)
 app.use('/api/products', productsRouter)
+app.use('/api/orders', orderRouter)
+
 app.get('/protected', validateJWT, (req, res) => {
   const { user } = req.session
   console.log(user)

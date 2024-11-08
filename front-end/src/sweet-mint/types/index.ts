@@ -1,3 +1,5 @@
+import {IProduct} from "../pages/AdminInvetory";
+
 export interface ProductProps {
   title: string;
   price: number;
@@ -17,8 +19,9 @@ export enum SortBy {
 
 export interface CartContextProps {
   productsCart: Record<string, {quantity: number}>;
-  addProduct: ({id, quantity}: {id: ProductProps["id"]; quantity: number}) => void;
-  removeProduct: (id: ProductProps["id"]) => void;
+  addProduct: ({id, quantity}: {id: IProduct["id"]; quantity: number}) => void;
+  removeProduct: (id: IProduct["id"]) => void;
+  resetCart: () => void;
 }
 
 export enum AUTH_ROLE {
@@ -31,6 +34,7 @@ export interface User {
   firstName: string;
   lastName: string;
   role: AUTH_ROLE;
+  user_id: string;
 }
 
 export interface StateAuth {
@@ -39,6 +43,7 @@ export interface StateAuth {
   profile: User;
   checkingCredentials: boolean;
   message: string | undefined;
+  products: IProduct[];
 }
 
 export interface ActionsAuth {
@@ -46,6 +51,7 @@ export interface ActionsAuth {
   loginUser: (value: LoginUser) => void;
   checkAuthToken: () => void;
   logoutUser: () => void;
+  getProducts: () => void;
 }
 
 export enum Status {
@@ -69,10 +75,15 @@ export enum AUTH_ACTION {
   ERROR_MESSAGE = "ERROR_MESSAGE",
   LOGIN_USER = "LOGIN_USER",
   STATUS_AUTH = "STATUS_AUTH",
+  GET_PRODUCTS = "GET_PRODUCTS",
+  LOGOUT_USER = "LOGOUT_USER",
 }
 
 export type AuthAction =
   | {type: AUTH_ACTION.ERROR_MESSAGE; value: string}
   | {type: AUTH_ACTION.REGISTER_USER; value: string}
   | {type: AUTH_ACTION.LOGIN_USER; value: User}
-  | {type: AUTH_ACTION.STATUS_AUTH; value: Status};
+  | {type: AUTH_ACTION.STATUS_AUTH; value: Status}
+  | {type: AUTH_ACTION.STATUS_AUTH; value: Status}
+  | {type: AUTH_ACTION.GET_PRODUCTS; value: IProduct[]}
+  | {type: AUTH_ACTION.LOGOUT_USER; value: StateAuth};

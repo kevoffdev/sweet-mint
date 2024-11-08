@@ -9,9 +9,6 @@ interface IResponseGetProducts extends IResponseRequest {
   products: IProduct[];
 }
 
-// interface IResponseLoginRequest extends IResponseRequest {
-// }
-
 export const createProductRequest = async (product: IProduct): Promise<IResponseRequest> => {
   return await fetch("http://localhost:3000/api/products/", {
     method: "POST",

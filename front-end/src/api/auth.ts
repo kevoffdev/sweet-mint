@@ -12,6 +12,7 @@ interface IResponseLoginRequest extends IResponseRequest {
     firstName: string;
     lastName: string;
     role: AUTH_ROLE;
+    user_id: string;
   };
 }
 

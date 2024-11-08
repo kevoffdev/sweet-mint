@@ -11,6 +11,7 @@ import {
   Status,
 } from "../types";
 import {loginRequest, logoutRequest, registerRequest, revalidateJWTRequest} from "../../api/auth";
+import {getProductsRequest} from "../../api/products";
 
 const initialContextAuth: StateAuth & ActionsAuth = {
   status: Status.Checking,
@@ -20,12 +21,15 @@ const initialContextAuth: StateAuth & ActionsAuth = {
     firstName: "",
     lastName: "",
     role: AUTH_ROLE.NOT_AUTHENTICATED,
+    user_id: "",
   },
   checkingCredentials: false,
+  products: [],
   registerUser: () => {},
   loginUser: () => {},
   checkAuthToken: () => {},
   logoutUser: () => {},
+  getProducts: () => {},
 };
 
 const initialState = {
@@ -36,8 +40,10 @@ const initialState = {
     firstName: "",
     lastName: "",
     role: AUTH_ROLE.NOT_AUTHENTICATED,
+    user_id: "",
   },
   checkingCredentials: false,
+  products: [],
 };
 
 export const AuthContext = createContext(initialContextAuth);
@@ -81,10 +87,16 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     }
   };
   const logoutUser = async () => {
-    const data = await logoutRequest();
+    try {
+      const data = await logoutRequest();
 
-    console.log(data);
-    checkAuthToken();
+      checkAuthToken();
+      if (!data.ok) return;
+
+      return dispatch({type: AUTH_ACTION.LOGOUT_USER, value: initialState});
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const checkAuthToken = async () => {
@@ -104,11 +116,30 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     }
   };
 
-  const {status, errorMessage, message, profile, checkingCredentials} = state;
+  const getProducts = async () => {
+    try {
+      const data = await getProductsRequest();
+
+      if (!data.ok) {
+        console.log(data);
+
+        return;
+        // return dispatch({type: AUTH_ACTION.ERROR_MESSAGE, value: ""});
+      }
+
+      return dispatch({type: AUTH_ACTION.GET_PRODUCTS, value: data.products});
+    } catch (error) {
+      console.error(error);
+      // return dispatch({type: AUTH_ACTION.STATUS_AUTH, value: Status.NotAuthenticated});
+    }
+  };
+
+  const {status, errorMessage, message, profile, checkingCredentials, products} = state;
 
   return (
     <AuthContext.Provider
       value={{
+        products,
         status,
         errorMessage,
         profile,
@@ -118,6 +149,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
         loginUser,
         checkAuthToken,
         logoutUser,
+        getProducts,
       }}
     >
       {children}

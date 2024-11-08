@@ -75,13 +75,12 @@ export class ProductsModel {
 
   static async updateProduct (req, res) {
     const { id } = req.params
-    const { title, price, categoria, tipo, image, quantity } = req.body
-
+    const { title, price, category, type, image, quantity } = req.body
     const fieldsToUpdate = {}
     if (title !== undefined) fieldsToUpdate.title = title
     if (price !== undefined) fieldsToUpdate.price = price
-    if (categoria !== undefined) fieldsToUpdate.categoria = categoria
-    if (tipo !== undefined) fieldsToUpdate.tipo = tipo
+    if (category !== undefined) fieldsToUpdate.category = category
+    if (type !== undefined) fieldsToUpdate.type = type
     if (image !== undefined) fieldsToUpdate.image = image
     if (quantity !== undefined) fieldsToUpdate.quantity = quantity
 

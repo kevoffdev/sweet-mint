@@ -1,14 +1,14 @@
-import {Link} from "react-router-dom";
-
 import {useAuth} from "../sweet-mint/hooks/useAuth";
 import {AUTH_ROLE, Status} from "../sweet-mint/types";
 import {RegisterModel} from "../sweet-mint/modals/RegisterModal";
 import {LoginModal} from "../sweet-mint/modals/LoginModal";
 import {useModal} from "../sweet-mint/hooks/useModal";
 import {useToggleBodyScroll} from "../sweet-mint/hooks/useToggleBodyScroll";
+import {useCart} from "../sweet-mint/hooks/useCart";
 
 export const Login = () => {
   const {status, logoutUser, profile} = useAuth();
+  const {resetCart} = useCart();
   const {
     isModalOpen: isModalRegisterOpen,
     openModal: openRegisterModal,
@@ -24,6 +24,11 @@ export const Login = () => {
   useToggleBodyScroll({isModalOpen: isModalRegisterOpen});
   const isAuthenticatedAdmin = status === Status.Authenticated && profile.role === AUTH_ROLE.CLIENT;
 
+  const logoutUserData = () => {
+    logoutUser();
+    resetCart();
+  };
+
   return (
     <>
       <nav className="">
@@ -34,13 +39,7 @@ export const Login = () => {
                 <p className="uppercase">{profile.firstName}</p>
               </li>
               <li>|</li>
-              <li>
-                <Link className="uppercase" to={"/panel/admin"}>
-                  Panel de administración
-                </Link>
-              </li>
-              <li>|</li>
-              <button onClick={logoutUser}>SALIR</button>
+              <button onClick={logoutUserData}>SALIR</button>
             </>
           ) : (
             <>

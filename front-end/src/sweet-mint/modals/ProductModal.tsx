@@ -12,7 +12,9 @@ export const ProductModal = ({
   handleEditProduct: (product: Partial<IProduct>, id: IProduct["id"]) => void;
 }) => {
   const [productForm, setProductForm] = useState(product);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
+  ) => {
     const {name, value} = e.target;
 
     setProductForm((prevForm) => ({
@@ -109,27 +111,54 @@ export const ProductModal = ({
                 <label className="mb-2 block text-sm font-medium text-gray-900" htmlFor="category">
                   Categoria:
                 </label>
-                <input
-                  className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
-                  id="category"
-                  name="category"
-                  type="text"
-                  value={productForm.category}
-                  onChange={handleChange}
-                />
+                <div className="grid grid-cols-2">
+                  <label className="flex items-center">
+                    Nacional
+                    <input
+                      checked={productForm.category === "nacionales"}
+                      name="category"
+                      type="radio"
+                      value="nacionales"
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <label className="flex items-center">
+                    Importado
+                    <input
+                      checked={productForm.category === "importados"}
+                      name="category"
+                      type="radio"
+                      value="importados"
+                      onChange={handleChange}
+                    />
+                  </label>
+                </div>
               </div>
               <div className="">
                 <label className="mb-2 block text-sm font-medium text-gray-900" htmlFor="type">
                   Tipo:
                 </label>
-                <input
+                <select
+                  required
+                  id="product-type"
+                  name="type"
+                  value={productForm.type}
+                  onChange={handleChange}
+                >
+                  <option value="">Selecciona un tipo</option>
+                  <option value="Bebidas">Bebidas</option>
+                  <option value="Snack">Snack</option>
+                  <option value="Chocolate">Chocolate</option>
+                  <option value="Varios">Varios</option>
+                </select>
+                {/* <input
                   className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
                   id="type"
                   name="type"
                   type="text"
                   value={productForm.type}
                   onChange={handleChange}
-                />
+                /> */}
               </div>
               <div className="">
                 <label className="mb-2 block text-sm font-medium text-gray-900" htmlFor="image">

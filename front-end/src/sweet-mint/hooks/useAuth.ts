@@ -8,10 +8,12 @@ export function useAuth() {
     message,
     status,
     profile,
+    products,
     registerUser,
     loginUser,
     logoutUser,
     checkAuthToken,
+    getProducts,
   } = useContext(AuthContext);
 
   return {
@@ -19,9 +21,11 @@ export function useAuth() {
     message,
     status,
     profile,
+    products,
     registerUser,
     loginUser,
     logoutUser,
     checkAuthToken,
+    getProducts,
   };
 }
