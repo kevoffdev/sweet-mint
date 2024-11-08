@@ -10,7 +10,14 @@ import {
 } from "../../api/products";
 import {ProductModal} from "../modals/ProductModal";
 import {useModal} from "../hooks/useModal";
-import {getOrderItemsRequest, getOrdersRequest, IOrder, IOrderItem} from "../../api/orders";
+import {
+  deleteOrderRequest,
+  getOrderItemsRequest,
+  getOrdersRequest,
+  IOrder,
+  IOrderItem,
+  updateOrderRequest,
+} from "../../api/orders";
 
 export interface IProduct {
   id: string;
@@ -125,6 +132,30 @@ const AdminInventory = () => {
     setSelectedOrder(null);
   };
 
+  const deleteOrder = async (orderId: IOrder["order_id"]) => {
+    const data = await deleteOrderRequest(orderId);
+
+    if (!data.ok) return;
+    setOrdersItems([]);
+    setSelectedOrder(null);
+    const newOrders = orders.filter((order) => order.order_id !== orderId);
+
+    setOrders(newOrders);
+  };
+
+  const updateOrder = async (orderId: IOrder["order_id"]) => {
+    const data = await updateOrderRequest(orderId, {status: "Enviado"});
+
+    if (data.ok) {
+      setOrdersItems([]);
+      setSelectedOrder(null);
+      setOrders(
+        orders.map((order) => (order.order_id === orderId ? {...order, status: "Enviado"} : order)),
+      );
+      console.log(data);
+    }
+  };
+
   useEffect(() => {
     async function getProduct() {
       const data = await getProductsRequest();
@@ -134,7 +165,7 @@ const AdminInventory = () => {
       }
     }
     getProduct();
-  }, []);
+  }, [orders]);
 
   useEffect(() => {
     async function getOrders() {
@@ -245,7 +276,7 @@ const AdminInventory = () => {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="product-image">Imagen:</label>
+                <label htmlFor="product-image">URL Imagen:</label>
                 <input
                   required
                   id="product-image"
@@ -381,8 +412,15 @@ const AdminInventory = () => {
                 <strong>Total:</strong> ${selectedOrder?.total_amount}
               </p>
               <div className="flex items-center justify-center gap-2">
-                <button className="btn-confirm">Confirmar</button>
-                <button className="btn-cancelate">Cancelar pedido</button>
+                <button className="btn-confirm" onClick={() => updateOrder(selectedOrder.order_id)}>
+                  Confirmar
+                </button>
+                <button
+                  className="btn-cancelate"
+                  onClick={() => deleteOrder(selectedOrder.order_id)}
+                >
+                  Cancelar pedido
+                </button>
                 <button className="btn-close" onClick={closeOrderDetails}>
                   Cerrar
                 </button>

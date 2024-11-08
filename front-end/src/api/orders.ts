@@ -57,7 +57,7 @@ export const deleteOrderRequest = async (orderId: string): Promise<IResponseRequ
 
 export const updateOrderRequest = async (
   orderId: string,
-  order: Partial<IOrder>,
+  order: {status: IOrder["status"]},
 ): Promise<IResponseRequest> => {
   return await fetch(`http://localhost:3000/api/orders/${orderId}`, {
     method: "PATCH",

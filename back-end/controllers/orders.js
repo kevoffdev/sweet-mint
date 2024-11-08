@@ -160,10 +160,70 @@ export class OrdersModel {
     }
   }
 
+  // static async deleteOrder (req, res) {
+  //   const { id } = req.params
+
+  //   try {
+  //     const [result] = await connection.query(`
+  //       DELETE FROM orders WHERE BIN_TO_UUID(order_id) = ?;
+  //     `, [id])
+
+  //     if (result.affectedRows === 0) {
+  //       return res.status(404).json({
+  //         ok: false,
+  //         msg: 'Order not found'
+  //       })
+  //     }
+
+  //     return res.status(200).json({
+  //       ok: true,
+  //       msg: 'Order deleted successfully'
+  //     })
+  //   } catch (error) {
+  //     console.error('Model Error:', error)
+  //     return res.status(500).json({
+  //       ok: false,
+  //       msg: 'Internal server error'
+  //     })
+  //   }
+  // }
+
   static async deleteOrder (req, res) {
     const { id } = req.params
-
     try {
+      // Obtener los productos asociados con la orden para restaurar el stock
+      const [orderItems] = await connection.query(`
+        SELECT BIN_TO_UUID(product_id) product_id, quantity
+        FROM order_items
+        WHERE order_id = UUID_TO_BIN(?);
+      `, [id])
+
+      console.log('orderItems', orderItems)
+
+      if (orderItems.length === 0) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Order items not found'
+        })
+      }
+
+      // Restaurar el stock de los productos eliminados
+      const updateStockPromises = orderItems.map(item => {
+        return connection.query(`
+          UPDATE products
+          SET quantity = quantity + ?
+          WHERE BIN_TO_UUID(id) = ?;
+        `, [item.quantity, item.product_id])
+      })
+      // console.log(updateStockPromises)
+      // Esperar a que se actualicen todos los productos
+      await Promise.all(updateStockPromises)
+
+      await connection.query(`
+        DELETE FROM order_items WHERE order_id = UUID_TO_BIN(?);
+      `, [id])
+
+      // Eliminar la orden
       const [result] = await connection.query(`
         DELETE FROM orders WHERE BIN_TO_UUID(order_id) = ?;
       `, [id])
@@ -177,7 +237,7 @@ export class OrdersModel {
 
       return res.status(200).json({
         ok: true,
-        msg: 'Order deleted successfully'
+        msg: 'Order deleted and stock restored successfully'
       })
     } catch (error) {
       console.error('Model Error:', error)
@@ -191,7 +251,7 @@ export class OrdersModel {
   static async updateOrder (req, res) {
     const { id } = req.params
     const { status } = req.body
-
+    console.log({ id, status })
     if (!status) {
       return res.status(400).json({
         ok: false,

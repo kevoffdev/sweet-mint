@@ -15,6 +15,9 @@ export const AppRouter = () => {
 
   useEffect(() => {
     getProducts();
+  }, []);
+
+  useEffect(() => {
     checkAuthToken();
   }, []);
 

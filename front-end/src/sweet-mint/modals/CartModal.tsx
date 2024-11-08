@@ -81,9 +81,6 @@ export const CartModal = ({isOpen, onClose}: CartModalProps) => {
 
     const data = await createOrderRequest(order);
 
-    console.log("order", order);
-    console.log("data", data);
-
     if (data.ok) {
       toast.success("Compra y pedido realizado");
 
